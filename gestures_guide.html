@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Guide des Gestes - Space Invaders</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0a1a;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc88;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      margin-bottom: 48px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .card {
+      background: #12122a;
+      border-radius: 20px;
+      padding: 36px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px solid transparent;
+      transition: transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 2px;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+    .card.fire  { border-color: #ff4455; box-shadow: 0 0 30px #ff445533; }
+    .card.enter { border-color: #ffcc00; box-shadow: 0 0 30px #ffcc0033; }
+    .card.left  { border-color: #4488ff; box-shadow: 0 0 30px #4488ff33; }
+    .card.right { border-color: #44ff88; box-shadow: 0 0 30px #44ff8833; }
+
+    .badge {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 900;
+      padding: 6px 20px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+    .fire  .badge { background: #ff4455; color: #fff; }
+    .enter .badge { background: #ffcc00; color: #000; }
+    .left  .badge { background: #4488ff; color: #fff; }
+    .right .badge { background: #44ff88; color: #000; }
+
+    .hand-wrap {
+      margin-bottom: 20px;
+    }
+
+    /* ========== SVG MAIN ========== */
+    svg.hand { overflow: visible; }
+
+    .label-main {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+    .fire  .label-main { color: #ff4455; }
+    .enter .label-main { color: #ffcc00; }
+    .left  .label-main { color: #4488ff; }
+    .right .label-main { color: #44ff88; }
+
+    .label-desc {
+      font-size: 1rem;
+      color: #aaa;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .key-hint {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .key {
+      background: #222244;
+      border: 1.5px solid #444466;
+      border-radius: 8px;
+      padding: 4px 14px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    /* Zone diagram at bottom */
+    .zone-diagram {
+      max-width: 900px;
+      width: 100%;
+      margin-top: 40px;
+      background: #12122a;
+      border-radius: 20px;
+      padding: 28px 36px;
+      border: 2px solid #333355;
+    }
+    .zone-diagram h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      color: #888;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .zone-bar {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 64px;
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+    .zone-left  { flex: 38; background: #1a2060; display:flex; align-items:center; justify-content:center; color:#4488ff; border-right:3px solid #4488ff; }
+    .zone-mid   { flex: 24; background: #1a1a2a; display:flex; align-items:center; justify-content:center; color:#666; }
+    .zone-right { flex: 38; background: #1a3022; display:flex; align-items:center; justify-content:center; color:#44ff88; border-left:3px solid #44ff88; }
+    .zone-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .tip {
+      margin-top: 28px;
+      font-size: 0.95rem;
+      color: #666;
+      text-align: center;
+      line-height: 1.7;
+    }
+    .tip span { color: #00ffcc; }
+  </style>
+</head>
+<body>
+
+<h1>GUIDE DES GESTES</h1>
+<p class="subtitle">Space Invaders × MediaPipe Hands — Contrôle par webcam</p>
+
+<div class="grid">
+
+  <!-- FIRE -->
+  <div class="card fire">
+    <div class="badge">FIRE</div>
+    <div class="hand-wrap">
+      <svg class="hand" width="120" height="160" viewBox="0 0 120 160">
+        <!-- Paume ouverte - tous les doigts étendus -->
+        <!-- Paume -->
+        <rect x="28" y="90" width="64" height="55" rx="14" fill="#f4c089"/>
+        <!-- Pouce -->
+        <rect x="10" y="85" width="22" height="36" rx="11" fill="#f4c089" transform="rotate(-20 21 85)"/>
+        <!-- Index -->
+        <rect x="28" y="28" width="16" height="68" rx="8" fill="#f4c089"/>
+        <!-- Majeur -->
+        <rect x="48" y="18" width="16" height="76" rx="8" fill="#f4c089"/>
+        <!-- Annulaire -->
+        <rect x="68" y="28" width="16" height="68" rx="8" fill="#f4c089"/>
+        <!-- Auriculaire -->
+        <rect x="88" y="45" width="14" height="52" rx="7" fill="#f4c089"/>
+        <!-- Lignes de jointures -->
+        <line x1="36" y1="90" x2="36" y2="90" stroke="#d4a070" stroke-width="1.5"/>
+        <!-- Effet brillance -->
+        <ellipse cx="60" cy="115" rx="20" ry="8" fill="#fff2" />
+        <!-- Eclairs de tir -->
+        <g opacity="0.9">
+          <line x1="60" y1="10" x2="60" y2="0" stroke="#ff4455" stroke-width="3" stroke-linecap="round"/>
+          <line x1="36" y1="18" x2="30" y2="8" stroke="#ff4455" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="84" y1="35" x2="90" y2="25" stroke="#ff4455" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="60" cy="0" r="4" fill="#ff4455"/>
+          <circle cx="30" cy="8" r="3" fill="#ff4455"/>
+          <circle cx="90" cy="25" r="3" fill="#ff4455"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label-main">PAUME OUVERTE</div>
+    <div class="label-desc">4 ou 5 doigts étendus<br>Peu importe la position</div>
+    <div class="key-hint"><span class="key">ESPACE</span></div>
+  </div>
+
+  <!-- ENTER -->
+  <div class="card enter">
+    <div class="badge">ENTER</div>
+    <div class="hand-wrap">
+      <svg class="hand" width="120" height="160" viewBox="0 0 120 160">
+        <!-- Poing fermé -->
+        <!-- Base paume -->
+        <rect x="25" y="75" width="70" height="60" rx="16" fill="#f4c089"/>
+        <!-- Doigts repliés - bosses -->
+        <rect x="25" y="60" width="70" height="28" rx="12" fill="#e8a870"/>
+        <!-- Jointures doigts -->
+        <circle cx="40" cy="66" r="8" fill="#f4c089"/>
+        <circle cx="56" cy="63" r="8" fill="#f4c089"/>
+        <circle cx="72" cy="63" r="8" fill="#f4c089"/>
+        <circle cx="87" cy="66" r="8" fill="#f4c089"/>
+        <!-- Pouce replié -->
+        <rect x="14" y="78" width="22" height="16" rx="8" fill="#f4c089"/>
+        <!-- Reflet -->
+        <ellipse cx="60" cy="120" rx="22" ry="8" fill="#fff2"/>
+        <!-- Etoiles "start" -->
+        <text x="60" y="45" text-anchor="middle" font-size="22" fill="#ffcc00">★</text>
+        <text x="35" y="40" text-anchor="middle" font-size="13" fill="#ffcc0077">★</text>
+        <text x="85" y="40" text-anchor="middle" font-size="13" fill="#ffcc0077">★</text>
+      </svg>
+    </div>
+    <div class="label-main">POING FERMÉ</div>
+    <div class="label-desc">0 ou 1 doigt étendu<br>Démarrer / Pause</div>
+    <div class="key-hint"><span class="key">ENTER</span></div>
+  </div>
+
+  <!-- LEFT -->
+  <div class="card left">
+    <div class="badge">LEFT</div>
+    <div class="hand-wrap">
+      <svg class="hand" width="150" height="160" viewBox="0 0 150 160">
+        <!-- Flèche gauche -->
+        <g transform="translate(5, 60)" opacity="0.9">
+          <polygon points="0,20 22,0 22,12 60,12 60,28 22,28 22,40" fill="#4488ff" opacity="0.85"/>
+        </g>
+        <!-- Main au centre-gauche -->
+        <g transform="translate(65, 20)">
+          <!-- Paume -->
+          <rect x="10" y="80" width="50" height="50" rx="12" fill="#f4c089"/>
+          <!-- Index étendu -->
+          <rect x="20" y="20" width="13" height="65" rx="6.5" fill="#f4c089"/>
+          <!-- Majeur légèrement étendu -->
+          <rect x="36" y="30" width="13" height="56" rx="6.5" fill="#e8a870"/>
+          <!-- Annulaire replié -->
+          <rect x="36" y="72" width="13" height="14" rx="6" fill="#d49060"/>
+          <!-- Auriculaire -->
+          <rect x="52" y="75" width="11" height="18" rx="5" fill="#d49060"/>
+          <!-- Pouce -->
+          <rect x="0" y="78" width="16" height="14" rx="7" fill="#f4c089" transform="rotate(-15 8 85)"/>
+          <ellipse cx="35" cy="105" rx="18" ry="7" fill="#fff2"/>
+        </g>
+        <!-- Label zone -->
+        <text x="30" y="148" text-anchor="middle" font-family="Orbitron, monospace" font-size="11" fill="#4488ff88">ZONE &lt; 38%</text>
+      </svg>
+    </div>
+    <div class="label-main">MAIN À GAUCHE</div>
+    <div class="label-desc">Glisse ta main dans<br>le tiers gauche de l'écran</div>
+    <div class="key-hint"><span class="key">←</span></div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="card right">
+    <div class="badge">RIGHT</div>
+    <div class="hand-wrap">
+      <svg class="hand" width="150" height="160" viewBox="0 0 150 160">
+        <!-- Main au centre-droit -->
+        <g transform="translate(15, 20)">
+          <!-- Paume -->
+          <rect x="10" y="80" width="50" height="50" rx="12" fill="#f4c089"/>
+          <!-- Index -->
+          <rect x="20" y="20" width="13" height="65" rx="6.5" fill="#f4c089"/>
+          <!-- Majeur -->
+          <rect x="36" y="30" width="13" height="56" rx="6.5" fill="#e8a870"/>
+          <!-- Annulaire replié -->
+          <rect x="36" y="72" width="13" height="14" rx="6" fill="#d49060"/>
+          <!-- Auriculaire -->
+          <rect x="52" y="75" width="11" height="18" rx="5" fill="#d49060"/>
+          <!-- Pouce -->
+          <rect x="0" y="78" width="16" height="14" rx="7" fill="#f4c089" transform="rotate(-15 8 85)"/>
+          <ellipse cx="35" cy="105" rx="18" ry="7" fill="#fff2"/>
+        </g>
+        <!-- Flèche droite -->
+        <g transform="translate(82, 60)" opacity="0.9">
+          <polygon points="63,20 40,0 40,12 0,12 0,28 40,28 40,40" fill="#44ff88" opacity="0.85"/>
+        </g>
+        <!-- Label zone -->
+        <text x="118" y="148" text-anchor="middle" font-family="Orbitron, monospace" font-size="11" fill="#44ff8888">ZONE &gt; 62%</text>
+      </svg>
+    </div>
+    <div class="label-main">MAIN À DROITE</div>
+    <div class="label-desc">Glisse ta main dans<br>le tiers droit de l'écran</div>
+    <div class="key-hint"><span class="key">→</span></div>
+  </div>
+
+</div>
+
+<!-- Zone diagram -->
+<div class="zone-diagram">
+  <h2>ZONES DE LA WEBCAM</h2>
+  <div class="zone-bar">
+    <div class="zone-left">← LEFT</div>
+    <div class="zone-mid">NEUTRE</div>
+    <div class="zone-right">RIGHT →</div>
+  </div>
+  <div class="zone-labels">
+    <span>0%</span>
+    <span>38%</span>
+    <span>62%</span>
+    <span>100%</span>
+  </div>
+  <p class="tip">
+    La webcam est divisée en <span>3 zones</span>.<br>
+    Place ta main dans la zone gauche ou droite pour bouger le vaisseau.<br>
+    <span>FIRE</span> et <span>ENTER</span> fonctionnent dans n'importe quelle zone.
+  </p>
+</div>
+
+</body>
+</html>

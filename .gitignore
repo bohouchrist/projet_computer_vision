@@ -37,4 +37,16 @@ Thumbs.db
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local 
+.env.production.local
+
+# Modeles lourds
+*.h5
+*.weights.h5
+hand_landmarker.task
+
+# Claude Code
+.claude/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb

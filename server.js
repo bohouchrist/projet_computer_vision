@@ -7,58 +7,76 @@ console.log('WebSocket server running on ws://localhost:8765');
 
 // Key code mapping
 const KEYCODES = {
-  'LEFT': 37,
+  'LEFT' : 37,
   'RIGHT': 39,
-  'FIRE': 32, // SPACE
+  'FIRE' : 32,
   'ENTER': 13
 };
 
-// When a client connects
-wss.on('connection', (ws) => {
-  console.log('Client connected');
-  
-  // Handle messages from clients (like Python script)
-  ws.on('message', (message) => {
-    const command = message.toString().trim().toUpperCase();
-    console.log(`Received command: ${command}`);
-    
-    // Check if the command is valid
-    if (KEYCODES[command]) {
-      const keyCode = KEYCODES[command];
-      
-      // Send keydown event
-      const keydownEvent = JSON.stringify({
-        type: 'keydown',
-        keyCode: keyCode
-      });
-      
-      // Broadcast keydown to all connected clients
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(keydownEvent);
-        }
-      });
-      
-      // After a small delay, send the keyup event
-      setTimeout(() => {
-        const keyupEvent = JSON.stringify({
-          type: 'keyup',
-          keyCode: keyCode
-        });
-        
-        // Broadcast keyup to all connected clients
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(keyupEvent);
-          }
-        });
-      }, 100); // 100ms delay
-    } else {
-      console.log(`Unknown command: ${command}`);
+// Commandes de mouvement continu (tenue tant que les commandes arrivent)
+const HOLD_COMMANDS = new Set(['LEFT', 'RIGHT', 'FIRE']);
+// Délai avant de relâcher si aucune nouvelle commande n'arrive (ms)
+const HOLD_TIMEOUT = 180;
+
+// Broadcast à tous les clients sauf l'expéditeur
+function broadcast(wss, sender, data) {
+  const msg = JSON.stringify(data);
+  wss.clients.forEach((client) => {
+    if (client !== sender && client.readyState === WebSocket.OPEN) {
+      client.send(msg);
     }
   });
-  
+}
+
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+
+  // Timers de relâchement par commande (pour cette connexion)
+  const holdTimers  = {};  // setTimeout handle
+  const heldKeys    = {};  // true si keydown déjà envoyé
+
+  ws.on('message', (message) => {
+    const command = message.toString().trim().toUpperCase();
+    console.log(`Received: ${command}`);
+
+    if (!KEYCODES[command]) {
+      console.log(`Unknown command: ${command}`);
+      return;
+    }
+
+    const keyCode = KEYCODES[command];
+
+    if (HOLD_COMMANDS.has(command)) {
+      // --- Commande tenue (LEFT, RIGHT, FIRE) ---
+      // Envoyer keydown seulement si la touche n'est pas déjà enfoncée
+      if (!heldKeys[command]) {
+        broadcast(wss, ws, { type: 'keydown', keyCode });
+        heldKeys[command] = true;
+      }
+      // Réinitialiser le timer de relâchement
+      clearTimeout(holdTimers[command]);
+      holdTimers[command] = setTimeout(() => {
+        broadcast(wss, ws, { type: 'keyup', keyCode });
+        heldKeys[command] = false;
+      }, HOLD_TIMEOUT);
+
+    } else {
+      // --- Commande unique (ENTER) ---
+      broadcast(wss, ws, { type: 'keydown', keyCode });
+      setTimeout(() => {
+        broadcast(wss, ws, { type: 'keyup', keyCode });
+      }, 100);
+    }
+  });
+
   ws.on('close', () => {
+    // Relâcher toutes les touches tenues à la déconnexion
+    Object.entries(heldKeys).forEach(([cmd, held]) => {
+      if (held) {
+        clearTimeout(holdTimers[cmd]);
+        broadcast(wss, ws, { type: 'keyup', keyCode: KEYCODES[cmd] });
+      }
+    });
     console.log('Client disconnected');
   });
 }); 
