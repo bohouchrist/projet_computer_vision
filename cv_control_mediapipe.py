@@ -4,7 +4,7 @@ cv_control_mediapipe.py - Contrôle de Space Invaders par gestes
 Gestes (simples et intuitifs) :
   - Main dans la zone GAUCHE  → LEFT  (déplacer le vaisseau)
   - Main dans la zone DROITE  → RIGHT (déplacer le vaisseau)
-  - Poing fermé  (0 doigt)    → FIRE  (tirer)
+  - Poing fermé vers l'avant (0 doigt) → FIRE  (tirer)
   - Paume ouverte (5 doigts)  → ENTER (démarrer)
 
   PRIORITÉ : FIRE > ENTER > LEFT / RIGHT

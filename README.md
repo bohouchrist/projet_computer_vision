@@ -71,7 +71,7 @@ http://localhost:8000
 |---|---|---|
 | ☝️ Index pointé à **gauche** | `LEFT` | Déplacer le vaisseau à gauche |
 | ☝️ Index pointé à **droite** | `RIGHT` | Déplacer le vaisseau à droite |
-| ✊ **Poing fermé** | `FIRE` | Tirer un missile |
+| ✊ **Poing fermé vers l'avant** (knuckles face caméra) | `FIRE` | Tirer un missile |
 | 🖐️ **Paume ouverte** (5 doigts écartés) | `ENTER` | Démarrer / valider |
 | 🤷 Tout autre geste | `NEUTRAL` | Aucune action |
 
