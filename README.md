@@ -64,12 +64,16 @@ http://localhost:8000
 
 ## Gestes pour jouer
 
+> 👉 **Guide visuel interactif** avec squelettes de mains animés :
+> ouvre `comment_jouer.html` dans le navigateur après avoir lancé le serveur HTTP.
+
 | Geste | Commande | Effet |
 |---|---|---|
-| Main à **gauche** de l'écran | `LEFT` | Déplacer le vaisseau à gauche |
-| Main à **droite** de l'écran | `RIGHT` | Déplacer le vaisseau à droite |
-| **Paume ouverte** (4-5 doigts) | `FIRE` | Tirer un missile |
-| **Poing fermé** (0-1 doigt) | `ENTER` | Démarrer / valider |
+| ☝️ Index pointé à **gauche** | `LEFT` | Déplacer le vaisseau à gauche |
+| ☝️ Index pointé à **droite** | `RIGHT` | Déplacer le vaisseau à droite |
+| 🖐️ **Paume ouverte** (5 doigts écartés) | `FIRE` | Tirer un missile |
+| ✊ **Poing fermé** | `ENTER` | Démarrer / valider |
+| 🤷 Tout autre geste | `NEUTRAL` | Aucune action |
 
 > La fenêtre webcam montre en temps réel le geste détecté et la zone dans laquelle se trouve ta main.
 
@@ -81,6 +85,7 @@ http://localhost:8000
 projet_computer_vision/
 │
 ├── index.html               # Page du jeu (chargée dans le navigateur)
+├── comment_jouer.html       # Guide interactif — gestes animés en 3D
 ├── game.bundle.js           # Jeu Space Invaders (JavaScript bundlé)
 ├── server.js                # Serveur WebSocket — relaie les commandes au jeu
 │
