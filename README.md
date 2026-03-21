@@ -1,132 +1,146 @@
+# Space Invaders — Contrôle par Gestes 🎮🖐️
 
+Joue à Space Invaders avec tes mains via la webcam !
+Le jeu détecte tes gestes en temps réel grâce à **MediaPipe** et les traduit en commandes de jeu.
 
-# Space Invaders with Custom Controls
+---
 
-This project allows you to play Space Invaders with custom input methods using a WebSocket bridge. The architecture separates the game from the input method, allowing you to control the game using various interfaces including keyboard, scripts, or even computer vision!
+## Prérequis
 
-## Setup and Installation
+- **Node.js** — [nodejs.org](https://nodejs.org/)
+- **Python 3.10+** — [python.org](https://www.python.org/)
+- Une **webcam**
 
-### Installing Node.js
+---
 
-If you don't have Node.js installed, follow these instructions:
+## Installation
 
-#### Windows
-1. Download the installer from [nodejs.org](https://nodejs.org/)
-2. Run the installer and follow the installation wizard
-3. Verify installation by running `node -v` in Command Prompt or PowerShell
-
-#### macOS
-Option 1: Using the installer
-1. Download the macOS installer from [nodejs.org](https://nodejs.org/)
-2. Run the installer and follow the installation wizard
-
-Option 2: Using Homebrew
-```bash
-brew install node
+### 1. Cloner le projet
+```powershell
+git clone https://github.com/bohouchrist/projet_computer_vision.git
+cd projet_computer_vision
 ```
 
-#### Linux
-Ubuntu/Debian:
-```bash
-sudo apt update
-sudo apt install nodejs npm
+### 2. Installer les dépendances Node.js
+```powershell
+npm install
 ```
 
-Fedora:
-```bash
-sudo dnf install nodejs
+### 3. Installer les dépendances Python
+```powershell
+pip install mediapipe opencv-python websockets numpy
 ```
 
-Verify your installation:
-```bash
-node -v
-npm -v
-```
+---
 
-### Prerequisites
+## Lancer le jeu
 
-- Node.js (for WebSocket server)
-- Python 3.6+
-- Required Python packages: `websockets` (for control module)
+Ouvre **3 terminaux PowerShell** dans le dossier du projet et tape une commande dans chacun :
 
-```bash
-# Install required Python packages
-pip install websockets
-```
-
-## How to Run the Game
-
-You need to run three separate components to play the game:
-
-### 1. Start the HTTP Server for the Game
-
-```bash
-# In the project root directory
-python -m http.server 8000
-```
-
-This will serve the game at `http://localhost:8000` - open this URL in your browser.
-
-### 2. Start the WebSocket Server
-
-```bash
-# In the project root directory
+**Terminal 1 — Serveur WebSocket**
+```powershell
 node server.js
 ```
 
-This starts the WebSocket server on port 8765, which acts as a bridge between your control inputs and the game.
-
-### 3. Start the Control Module
-
-```bash
-# In the project root directory
-python control_module.py
+**Terminal 2 — Détection des gestes (webcam)**
+```powershell
+python cv_control_mediapipe.py
 ```
 
-This runs the basic input module that takes keyboard commands and sends them to the game.
+**Terminal 3 — Serveur du jeu**
+```powershell
+python -m http.server 8000
+```
 
-## How It Works
+Puis ouvre ton navigateur sur :
+```
+http://localhost:8000
+```
 
-1. The Space Invaders game runs in the browser and listens for WebSocket events
-2. The Node.js server (`server.js`) acts as a bridge, receiving commands and converting them into keypress events
-3. The control module (`control_module.py`) captures your input and sends commands to the WebSocket server
+> Les 3 terminaux doivent rester ouverts pendant toute la partie.
+> Pour arrêter la détection : appuie sur **Q** dans la fenêtre webcam.
 
-The following commands are available in the basic control module:
-- 'q' or 'left' = Move Left
-- 'd' or 'right' = Move Right
-- 'space' or 'f' = Fire
-- 'enter' or 's' = Enter/Select
-- 'a' = Quit the control module
+---
 
-## Your Assignment: Computer Vision Controls
+## Gestes pour jouer
 
-Your task is to create a computer vision-based controller for the game. You should:
+| Geste | Commande | Effet |
+|---|---|---|
+| Main à **gauche** de l'écran | `LEFT` | Déplacer le vaisseau à gauche |
+| Main à **droite** de l'écran | `RIGHT` | Déplacer le vaisseau à droite |
+| **Paume ouverte** (4-5 doigts) | `FIRE` | Tirer un missile |
+| **Poing fermé** (0-1 doigt) | `ENTER` | Démarrer / valider |
 
-1. Train a computer vision model that can recognize gestures, objects, or movements
-2. Create a new control module based on `control_module.py` that:
-   - Captures video from a camera
-   - Processes frames with your computer vision model
-   - Translates detected actions into game commands
-   - Sends those commands to the WebSocket server
+> La fenêtre webcam montre en temps réel le geste détecté et la zone dans laquelle se trouve ta main.
 
-For example, you might detect hand positions and map them to the following controls:
-- Hand on left side → LEFT command
-- Hand on right side → RIGHT command
-- Hand raised → FIRE command
-- Two hands visible → ENTER command
+---
 
-## Implementation Tips
+## Architecture du projet
 
-1. Study the existing `control_module.py` to understand how to send commands to the WebSocket
-2. You can use any computer vision library (OpenCV, MediaPipe, etc.)
-3. Test your system with simple detection before implementing advanced features
-4. Consider what gestures or objects would make intuitive game controls
-5. Remember that the game only needs four commands: LEFT, RIGHT, FIRE, and ENTER
+```
+projet_computer_vision/
+│
+├── index.html               # Page du jeu (chargée dans le navigateur)
+├── game.bundle.js           # Jeu Space Invaders (JavaScript bundlé)
+├── server.js                # Serveur WebSocket — relaie les commandes au jeu
+│
+├── cv_control_mediapipe.py  # Détection gestes par webcam (MediaPipe)
+│
+├── core/                    # Moteur du jeu
+├── entities/                # Entités (joueur, envahisseurs, balles)
+└── utils/                   # Utilitaires (input, canvas, score...)
+```
 
-Good luck and have fun building your computer vision-controlled Space Invaders game!
+### Comment ça fonctionne
 
+```
+Webcam → MediaPipe (détection main) → Python → WebSocket → Node.js → Navigateur (jeu)
+```
 
-## License
+1. **MediaPipe** détecte les 21 points de ta main en temps réel
+2. **Python** analyse la position et la forme de ta main → détermine le geste
+3. La commande (`LEFT`, `RIGHT`, `FIRE`, `ENTER`) est envoyée via **WebSocket**
+4. **Node.js** la reçoit et simule l'appui sur la touche correspondante
+5. Le **jeu** réagit comme si tu avais appuyé sur le clavier
 
-Free to use and abuse under the MIT license.
-http://www.opensource.org/licenses/mit-license.php
+---
+
+## Contrôles clavier alternatifs
+
+Tu peux aussi jouer au clavier directement dans le navigateur :
+
+| Touche | Action |
+|---|---|
+| `←` Flèche gauche | Déplacer à gauche |
+| `→` Flèche droite | Déplacer à droite |
+| `Espace` | Tirer |
+| `Entrée` | Démarrer |
+
+---
+
+## Dépannage
+
+**La webcam ne s'ouvre pas**
+```powershell
+# Changer l'index de la caméra dans cv_control_mediapipe.py
+CAMERA_INDEX = 1  # essaie 0, 1 ou 2
+```
+
+**Erreur `EADDRINUSE port 8765`** — Un ancien serveur tourne encore :
+```powershell
+# Trouver et tuer le processus
+netstat -ano | findstr :8765
+taskkill /PID <le_numero> /F
+```
+
+**Le modèle MediaPipe se télécharge automatiquement** au premier lancement (~8 MB).
+Si le téléchargement échoue, télécharge manuellement `hand_landmarker.task` depuis :
+https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+
+---
+
+## Projet académique
+
+Ce projet a été réalisé dans le cadre d'un cours d'initiation à la **Vision par Ordinateur**.
+Le dossier d'entraînement du modèle CNN et le rapport complet sont disponibles ici :
+👉 [github.com/bohouchrist/cnn_training](https://github.com/bohouchrist/cnn_training)
