@@ -4,8 +4,8 @@ cv_control_mediapipe.py - Contrôle de Space Invaders par gestes
 Gestes (simples et intuitifs) :
   - Main dans la zone GAUCHE  → LEFT  (déplacer le vaisseau)
   - Main dans la zone DROITE  → RIGHT (déplacer le vaisseau)
-  - Paume ouverte (5 doigts)  → FIRE  (tirer)
-  - Poing fermé  (0 doigt)    → ENTER (démarrer)
+  - Poing fermé  (0 doigt)    → FIRE  (tirer)
+  - Paume ouverte (5 doigts)  → ENTER (démarrer)
 
   PRIORITÉ : FIRE > ENTER > LEFT / RIGHT
   Pour FIRE/ENTER, la position de la main n'a pas d'importance.
@@ -109,12 +109,12 @@ def classify_gesture(landmarks, frame_w, frame_h):
 
     total = n + (1 if thumb else 0)
 
-    # Paume ouverte (4-5 éléments étendus) → FIRE
-    if total >= 4:
+    # Poing fermé (0-1 élément étendu) → FIRE
+    if total <= 1:
         return 'fire', palm_x, palm_y
 
-    # Poing fermé (0-1 élément étendu) → ENTER
-    if total <= 1:
+    # Paume ouverte (4-5 éléments étendus) → ENTER
+    if total >= 4:
         return 'enter', palm_x, palm_y
 
     # Autrement (2-3 doigts) → navigation selon position
@@ -189,8 +189,8 @@ async def main():
     print("=== CONTRÔLES ===")
     print("  Main à GAUCHE      →  LEFT")
     print("  Main à DROITE      →  RIGHT")
-    print("  Paume ouverte      →  FIRE")
-    print("  Poing fermé        →  ENTER")
+    print("  Poing fermé        →  FIRE")
+    print("  Paume ouverte      →  ENTER")
     print("  'Q' dans la fenêtre ou Ctrl+C  →  Quitter\n")
 
     try:

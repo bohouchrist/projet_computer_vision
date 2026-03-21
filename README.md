@@ -71,8 +71,8 @@ http://localhost:8000
 |---|---|---|
 | ☝️ Index pointé à **gauche** | `LEFT` | Déplacer le vaisseau à gauche |
 | ☝️ Index pointé à **droite** | `RIGHT` | Déplacer le vaisseau à droite |
-| 🖐️ **Paume ouverte** (5 doigts écartés) | `FIRE` | Tirer un missile |
-| ✊ **Poing fermé** | `ENTER` | Démarrer / valider |
+| ✊ **Poing fermé** | `FIRE` | Tirer un missile |
+| 🖐️ **Paume ouverte** (5 doigts écartés) | `ENTER` | Démarrer / valider |
 | 🤷 Tout autre geste | `NEUTRAL` | Aucune action |
 
 > La fenêtre webcam montre en temps réel le geste détecté et la zone dans laquelle se trouve ta main.
