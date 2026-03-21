@@ -64,13 +64,13 @@ print(f"Classes : {CLASSES}\n")
 # ============================================================
 # CONFIGURATION
 # ============================================================
-SEUIL_CONFIANCE = 0.75
-STABILITE       = 2
+SEUIL_CONFIANCE = 0.70   # même seuil que le test local
+# Pas de buffer de stabilisation : le serveur gère le "hold" avec HOLD_TIMEOUT=180ms
 
 COOLDOWN = {
-    'LEFT'   : 0.05,
-    'RIGHT'  : 0.05,
-    'FIRE'   : 0.05,
+    'LEFT'   : 0.08,   # envoie toutes les 80ms → touche maintenue (HOLD_TIMEOUT=180ms)
+    'RIGHT'  : 0.08,
+    'FIRE'   : 0.08,
     'ENTER'  : 0.80,
     'NEUTRAL': 9999,
 }
@@ -173,7 +173,6 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 last_sent    = {c: 0.0 for c in CLASSES}
 last_command = None
-buffer       = []
 start_ms     = int(time.time() * 1000)
 
 CONN = [
@@ -228,33 +227,23 @@ try:
             confiance = float(probs_all[idx])
             geste     = CLASSES[idx] if confiance >= SEUIL_CONFIANCE else None
 
-        # Stabilisation
-        buffer.append(geste)
-        if len(buffer) > STABILITE:
-            buffer.pop(0)
-        geste_stable = (
-            buffer[-1]
-            if len(buffer) == STABILITE and len(set(buffer)) == 1
-            else None
-        )
-
-        # Envoi commande
+        # Envoi commande — direct, sans buffer de stabilisation
         now = time.time()
-        if geste_stable and geste_stable != 'NEUTRAL' and ws_connecte.is_set():
-            if now - last_sent[geste_stable] >= COOLDOWN[geste_stable]:
-                envoyer(geste_stable)
-                last_sent[geste_stable] = now
-                last_command = geste_stable
-                print(f"  {geste_stable:<8} {confiance*100:.0f}%")
+        if geste and geste != 'NEUTRAL' and ws_connecte.is_set():
+            if now - last_sent[geste] >= COOLDOWN[geste]:
+                envoyer(geste)
+                last_sent[geste] = now
+                last_command     = geste
+                print(f"  {geste:<8} {confiance*100:.0f}%")
 
         # ============================================================
         # AFFICHAGE
         # ============================================================
         cv2.rectangle(frame, (0, 0), (w, 75), (25, 25, 25), -1)
 
-        if geste_stable and geste_stable != 'NEUTRAL':
-            col = COULEURS[geste_stable]
-            cv2.putText(frame, geste_stable,
+        if geste and geste != 'NEUTRAL':
+            col = COULEURS[geste]
+            cv2.putText(frame, geste,
                         (10, 58), cv2.FONT_HERSHEY_SIMPLEX, 1.8, col, 4)
             bw = int((w - 210) * confiance)
             cv2.rectangle(frame, (175, 28), (175 + bw, 60), col, -1)

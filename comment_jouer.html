@@ -133,7 +133,7 @@
 
   /* Section lancement */
   .launch {
-    max-width: 900px;
+    max-width: 960px;
     margin: 50px auto 20px;
     padding: 0 30px;
   }
@@ -142,43 +142,52 @@
     font-size: 1.6rem;
     color: #00e5ff;
     letter-spacing: 3px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     text-transform: uppercase;
+  }
+  .launch .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
   }
   .steps {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 16px;
   }
   .step {
     background: rgba(255,255,255,0.04);
     border-radius: 16px;
-    padding: 22px;
+    padding: 20px;
     border: 1px solid rgba(0,229,255,0.15);
     text-align: center;
   }
-  .step .num {
-    width: 40px; height: 40px;
+.step .num {
+    width: 36px; height: 36px;
     border-radius: 50%;
     background: #00e5ff22;
     border: 2px solid #00e5ff;
     color: #00e5ff;
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px;
+    margin: 0 auto 12px;
   }
-  .step h3 { font-size: 0.9rem; color: #ccc; margin-bottom: 8px; }
+.step h3 { font-size: 0.85rem; color: #ccc; margin-bottom: 6px; }
+  .step .dir { font-size: 0.7rem; color: #666; margin-bottom: 4px; font-style: italic; }
   .step code {
     display: block;
     background: rgba(0,0,0,0.4);
     border-radius: 8px;
     padding: 8px 10px;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     color: #00e5ff;
     word-break: break-all;
-    margin-top: 8px;
+    margin-top: 6px;
   }
+.step .note { font-size: 0.68rem; color: #555; margin-top: 6px; }
 
   /* Neutral */
   .neutral-box {
@@ -224,7 +233,7 @@
       <div class="key-badge">→ RIGHT</div>
       <h2>DROITE</h2>
       <p class="description">Déplace le vaisseau vers la droite</p>
-      <div class="gesture-desc">☝️ Main gauche, index pointé vers la droite — déplace la main dans la zone droite de l'écran</div>
+      <div class="gesture-desc">☝️ Main gauche, index pointé vers la droite</div>
     </div>
 
     <!-- LEFT -->
@@ -233,7 +242,7 @@
       <div class="key-badge">← LEFT</div>
       <h2>GAUCHE</h2>
       <p class="description">Déplace le vaisseau vers la gauche</p>
-      <div class="gesture-desc">☝️ Main droite, index pointé vers la gauche — déplace la main dans la zone gauche de l'écran</div>
+      <div class="gesture-desc">☝️ Main droite, index pointé vers la gauche</div>
     </div>
 
     <!-- FIRE -->
@@ -242,7 +251,7 @@
       <div class="key-badge">⎵ FIRE</div>
       <h2>TIRER</h2>
       <p class="description">Lance un missile sur les envahisseurs</p>
-      <div class="gesture-desc">✊ Poing fermé vers l'avant, knuckles face à la caméra</div>
+      <div class="gesture-desc">✊ Main gauche, poing fermé vers l'avant, knuckles face à la caméra</div>
     </div>
 
     <!-- ENTER -->
@@ -266,28 +275,39 @@
   <!-- LANCEMENT -->
   <div class="launch">
     <h2>Comment lancer le jeu</h2>
+    <p class="subtitle">Ouvre 3 terminaux dans le dossier du projet — dans cet ordre</p>
+
     <div class="steps">
-      <div class="step">
-        <div class="num">1</div>
-        <h3>Serveur WebSocket</h3>
-        <code>node server.js</code>
-      </div>
-      <div class="step">
-        <div class="num">2</div>
-        <h3>Détection webcam</h3>
-        <code>python cv_control_mediapipe.py</code>
-      </div>
-      <div class="step">
-        <div class="num">3</div>
-        <h3>Serveur du jeu</h3>
-        <code>python -m http.server 8000</code>
-      </div>
-      <div class="step">
-        <div class="num">4</div>
-        <h3>Ouvrir dans le navigateur</h3>
-        <code>http://localhost:8000</code>
-      </div>
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Serveur WebSocket</h3>
+          <div class="dir">📁 projet_computer_vision/</div>
+          <code>node server.js</code>
+          <div class="note">Attend : "listening on port 8765"</div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Détection CNN + webcam</h3>
+          <div class="dir">📁 cnn_training/</div>
+          <code>python 5_jouer_avec_cnn.py</code>
+          <div class="note">La fenêtre webcam s'ouvre</div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Serveur du jeu</h3>
+          <div class="dir">📁 projet_computer_vision/</div>
+          <code>python -m http.server 8000</code>
+          <div class="note">Attend : "Serving HTTP on port 8000"</div>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <h3>Ouvrir dans le navigateur</h3>
+          <div class="dir">🌐 navigateur</div>
+          <code>http://localhost:8000</code>
+          <div class="note">Puis appuie sur ENTER pour démarrer</div>
+        </div>
     </div>
+
   </div>
 
   <footer>Space Invaders — Projet Vision par Ordinateur · CHRIST BOHOU · 2026</footer>
