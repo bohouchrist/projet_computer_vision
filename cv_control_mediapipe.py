@@ -251,9 +251,9 @@ async def main():
 
             # Rappel gestes FIRE/ENTER au centre
             cx = left_x + (right_x - left_x) // 2
-            cv2.putText(frame, "Paume=FIRE", (cx - 60, h - 25),
+            cv2.putText(frame, "Poing=FIRE", (cx - 55, h - 25),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.45, (220, 220, 50), 1)
-            cv2.putText(frame, "Poing=ENTER", (cx - 65, h - 10),
+            cv2.putText(frame, "Paume=ENTER", (cx - 60, h - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.45, (220, 220, 50), 1)
 
             # Geste actuel (grand texte en haut)
