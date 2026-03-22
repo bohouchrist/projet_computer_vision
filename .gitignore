@@ -49,4 +49,7 @@ hand_landmarker.task
 
 # Jupyter
 .ipynb_checkpoints/
-*.ipynb
+*.ipynbrapport_projet.aux
+rapport_projet.toc
+rapport_projet.out
+rapport_projet.log
