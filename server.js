@@ -1,82 +1,72 @@
+// serveur websocket qui fait le lien entre python et le jeu
+// recoit les commandes de gestes et simule les touches clavier
+// Christ Bohou & Djafarou Oulare
+
 const WebSocket = require('ws');
 
-// Create a WebSocket server on port 8765
 const wss = new WebSocket.Server({ port: 8765 });
+console.log('serveur websocket sur ws://localhost:8765');
 
-console.log('WebSocket server running on ws://localhost:8765');
-
-// Key code mapping
-const KEYCODES = {
+// correspondance geste -> code de touche
+const TOUCHES = {
   'LEFT' : 37,
   'RIGHT': 39,
   'FIRE' : 32,
   'ENTER': 13
 };
 
-// Commandes de mouvement continu (tenue tant que les commandes arrivent)
-const HOLD_COMMANDS = new Set(['LEFT', 'RIGHT', 'FIRE']);
-// Délai avant de relâcher si aucune nouvelle commande n'arrive (ms)
-const HOLD_TIMEOUT = 180;
+// ces commandes restent actives tant qu elles arrivent
+const COMMANDES_CONTINUES = new Set(['LEFT', 'RIGHT', 'FIRE']);
+const DELAI_RELACHE = 180; // ms avant de relacher la touche
 
-// Broadcast à tous les clients sauf l'expéditeur
-function broadcast(wss, sender, data) {
+function diffuser(expéditeur, data) {
   const msg = JSON.stringify(data);
-  wss.clients.forEach((client) => {
-    if (client !== sender && client.readyState === WebSocket.OPEN) {
+  wss.clients.forEach(client => {
+    if (client !== expéditeur && client.readyState === WebSocket.OPEN) {
       client.send(msg);
     }
   });
 }
 
 wss.on('connection', (ws) => {
-  console.log('Client connected');
-
-  // Timers de relâchement par commande (pour cette connexion)
-  const holdTimers  = {};  // setTimeout handle
-  const heldKeys    = {};  // true si keydown déjà envoyé
+  console.log('client connecte');
+  const timers = {};
+  const tenues = {};
 
   ws.on('message', (message) => {
-    const command = message.toString().trim().toUpperCase();
-    console.log(`Received: ${command}`);
+    const cmd = message.toString().trim().toUpperCase();
+    // on ignore les commandes inconnues
+    if (!TOUCHES[cmd]) return;
 
-    if (!KEYCODES[command]) {
-      console.log(`Unknown command: ${command}`);
-      return;
-    }
+    const code = TOUCHES[cmd];
 
-    const keyCode = KEYCODES[command];
-
-    if (HOLD_COMMANDS.has(command)) {
-      // --- Commande tenue (LEFT, RIGHT, FIRE) ---
-      // Envoyer keydown seulement si la touche n'est pas déjà enfoncée
-      if (!heldKeys[command]) {
-        broadcast(wss, ws, { type: 'keydown', keyCode });
-        heldKeys[command] = true;
+    if (COMMANDES_CONTINUES.has(cmd)) {
+      // si la touche est pas deja enfoncee on envoie keydown
+      if (!tenues[cmd]) {
+        diffuser(ws, { type: 'keydown', keyCode: code });
+        tenues[cmd] = true;
       }
-      // Réinitialiser le timer de relâchement
-      clearTimeout(holdTimers[command]);
-      holdTimers[command] = setTimeout(() => {
-        broadcast(wss, ws, { type: 'keyup', keyCode });
-        heldKeys[command] = false;
-      }, HOLD_TIMEOUT);
-
+      // reset du timer a chaque nouvelle commande
+      clearTimeout(timers[cmd]);
+      timers[cmd] = setTimeout(() => {
+        diffuser(ws, { type: 'keyup', keyCode: code });
+        tenues[cmd] = false;
+      }, DELAI_RELACHE);
     } else {
-      // --- Commande unique (ENTER) ---
-      broadcast(wss, ws, { type: 'keydown', keyCode });
-      setTimeout(() => {
-        broadcast(wss, ws, { type: 'keyup', keyCode });
-      }, 100);
+      // pour ENTER : juste un appui court
+      diffuser(ws, { type: 'keydown', keyCode: code });
+      setTimeout(() => diffuser(ws, { type: 'keyup', keyCode: code }), 100);
     }
   });
 
   ws.on('close', () => {
-    // Relâcher toutes les touches tenues à la déconnexion
-    Object.entries(heldKeys).forEach(([cmd, held]) => {
-      if (held) {
-        clearTimeout(holdTimers[cmd]);
-        broadcast(wss, ws, { type: 'keyup', keyCode: KEYCODES[cmd] });
+    // on relache toutes les touches quand le client se deconnecte
+    Object.entries(tenues).forEach(([cmd, active]) => {
+      if (active) {
+        clearTimeout(timers[cmd]);
+        diffuser(ws, { type: 'keyup', keyCode: TOUCHES[cmd] });
       }
     });
-    console.log('Client disconnected');
+    console.log('client deconnecte');
   });
-}); 
+});

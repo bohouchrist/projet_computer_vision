@@ -1,0 +1,60 @@
+\relax 
+\providecommand \babel@aux [2]{\global \let \babel@toc \@gobbletwo }
+\@nameuse{bbl@beforestart}
+\catcode `:\active 
+\catcode `;\active 
+\catcode `!\active 
+\catcode `?\active 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\babel@aux{french}{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction et Objectif}{2}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Gestes reconnus}{2}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Vue d'ensemble du systeme deploye}{2}{subsection.1.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Pipeline complet de controle gestuel en temps reel.}}{2}{figure.caption.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Synthese des trois approches}{2}{subsection.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Approche 1 : CNN sur Images Brutes}{3}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Collecte des donnees}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Capture automatique d'images brutes.}}{3}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Architecture du modele}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}{\ignorespaces Architecture CNN 3 blocs avec BatchNorm et Dropout.}}{3}{lstlisting.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Resultats}{4}{subsection.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Courbes d'entrainement -- CNN images brutes. Precision de validation stagnant autour de 20\% avec un seul pic isole a 34.3\%. Aucune convergence stable.}}{4}{figure.caption.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Analyse.}{5}{figure.caption.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Approche 2 : MLP et CNN sur Images Kaggle}{6}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Collecte des donnees}{6}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Distribution du dataset Kaggle. 2\,000 images par classe en train, 100 en validation, 300 en test.}}{6}{figure.caption.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces Chargement et pretraitement du dataset Kaggle.}}{6}{lstlisting.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Modele MLP}{6}{subsection.3.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}{\ignorespaces Architecture MLP.}}{6}{lstlisting.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Courbes MLP -- convergence sur 100 epochs sur le dataset Kaggle.}}{7}{figure.caption.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Modele CNN}{7}{subsection.3.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces Architecture CNN Kaggle.}}{7}{lstlisting.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Courbes CNN Kaggle -- 100\% en 10 epochs sur fond blanc.}}{8}{figure.caption.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Limite critique}{8}{subsection.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {Illustration du distribution shift.} A gauche : le dataset Kaggle -- fond blanc parfaitement uniforme, eclairage controlee, cadrage identique pour toutes les images. A droite : les conditions reelles de deploiement -- fond encombre, ombres, eclairage variable, teinte de peau differente. Le modele entraine exclusivement sur fond blanc apprend les statistiques du fond, pas celles de la main. En conditions reelles, il ne voit jamais de fond blanc et echoue systematiquement.}}{8}{figure.caption.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Approche 3 : Reseau Dense sur Landmarks MediaPipe}{9}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}MediaPipe HandLandmarker}{9}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Collecte des donnees}{9}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Normalisation geometrique}{9}{subsubsection.4.2.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces Normalisation des landmarks.}}{9}{lstlisting.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Architecture du modele}{10}{subsection.4.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}{\ignorespaces Reseau dense sur landmarks (4\_entrainer\_landmarks.py).}}{10}{lstlisting.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Entrainement}{10}{subsection.4.4}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}{\ignorespaces Entrainement avec callbacks.}}{10}{lstlisting.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Resultats}{11}{subsection.4.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Courbes -- reseau dense sur landmarks. Convergence rapide et stable. Pas de sur-apprentissage.}}{11}{figure.caption.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Integration dans le jeu}{12}{subsection.4.6}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}{\ignorespaces Boucle d'inference temps reel.}}{12}{lstlisting.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Comparaison et Discussion}{13}{section.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Comparaison des trois approches.}}{13}{table.caption.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}La representation avant le modele}{13}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Limites}{13}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{FIRE moins robuste avec la main droite.}{13}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Impossibilite de tirer en se deplacant.}{13}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Perspectives}{13}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{14}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Structure du depot}{15}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Lancement}{15}{appendix.B}\protected@file@percent }
+\gdef \@abspage@last{16}
