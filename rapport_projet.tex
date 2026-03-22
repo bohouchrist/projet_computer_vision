@@ -378,6 +378,19 @@ Ce phenomene est le \textbf{distribution shift} : l'ecart entre la
 distribution d'entrainement (fond blanc controlee) et la distribution
 reelle (fond de piece, eclairage variable) empeche toute generalisation.
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{cnn_training/modeles/images_rapport/distribution_shift.png}
+\caption{\textbf{Illustration du distribution shift.}
+A gauche : le dataset Kaggle -- fond blanc parfaitement uniforme,
+eclairage controlee, cadrage identique pour toutes les images.
+A droite : les conditions reelles de deploiement -- fond encombre,
+ombres, eclairage variable, teinte de peau differente.
+Le modele entraine exclusivement sur fond blanc apprend les statistiques
+du fond, pas celles de la main. En conditions reelles, il ne voit
+jamais de fond blanc et echoue systematiquement.}
+\end{figure}
+
 \newpage
 %%============================================================
 \section{Approche 3 : Reseau Dense sur Landmarks MediaPipe}
