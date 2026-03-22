@@ -1,9 +1,8 @@
-%% ============================================================
-%%  Rapport final — Contrôle d'un jeu par gestes de la main
-%%  Vision par Ordinateur — Master 2 Mathématiques
-%%  Auteurs : Christ Bohou  &  Djafarou Oulare
-%%  Date   : Mars 2026
-%% ============================================================
+%%============================================================
+%%  Rapport final -- Controle d'un jeu par gestes de la main
+%%  Vision par Ordinateur -- Master 2 Mathematiques
+%%  Auteurs : Christ Bohou & Djafarou Oulare -- Mars 2026
+%%============================================================
 \documentclass[12pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
@@ -17,7 +16,7 @@
 \usepackage{graphicx}
 \usepackage[dvipsnames,table]{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,backgrounds}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{array}
@@ -31,537 +30,419 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{skins,breakable}
 \usepackage{caption}
-\usepackage{subcaption}
 \setlength{\headheight}{15pt}
 
-% --- Style listings ---
 \lstset{
   basicstyle=\ttfamily\footnotesize,
   backgroundcolor=\color{gray!7},
-  frame=single,
-  rulecolor=\color{gray!40},
-  breaklines=true,
-  showstringspaces=false,
-  commentstyle=\itshape\color{gray!70},
+  frame=single,rulecolor=\color{gray!35},
+  breaklines=true,showstringspaces=false,
+  commentstyle=\itshape\color{gray!65},
   keywordstyle=\bfseries\color{NavyBlue},
-  stringstyle=\color{orange!80!black},
-  numbers=left,
-  numberstyle=\tiny\color{gray},
-  xleftmargin=1.5em,
-  language=Python,
-  aboveskip=8pt,
-  belowskip=4pt
+  stringstyle=\color{orange!75!black},
+  numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=1.5em,language=Python,
+  aboveskip=6pt,belowskip=4pt
 }
 
-% --- En-têtes ---
-\pagestyle{fancy}
-\fancyhf{}
-\rhead{\small Vision par Ordinateur — M2 Mathématiques}
-\lhead{\small Contrôle d'un jeu par gestes}
+\pagestyle{fancy}\fancyhf{}
+\rhead{\small Vision par Ordinateur -- M2 Mathematiques}
+\lhead{\small Controle d'un jeu par gestes}
 \cfoot{\thepage}
 
-% --- Titres ---
 \titleformat{\section}{\large\bfseries\color{NavyBlue}}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalsize\bfseries\color{MidnightBlue}}{\thesubsection}{1em}{}
-\titleformat{\subsubsection}{\normalsize\itshape\color{MidnightBlue}}{\thesubsubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\itshape\color{MidnightBlue!80}}{\thesubsubsection}{1em}{}
 
-% --- Boîtes ---
-\newtcolorbox{keybox}[1][]{colback=NavyBlue!5,colframe=NavyBlue!55,title=#1,fonttitle=\bfseries\small,breakable}
-\newtcolorbox{resultbox}[1][]{colback=ForestGreen!5,colframe=ForestGreen!50,title=#1,fonttitle=\bfseries\small,breakable}
-\newtcolorbox{failbox}[1][]{colback=BrickRed!5,colframe=BrickRed!45,title=#1,fonttitle=\bfseries\small,breakable}
-\newtcolorbox{codebox}[1][]{colback=gray!5,colframe=gray!40,title=#1,fonttitle=\ttfamily\small,breakable}
+\newtcolorbox{approchebox}[2][NavyBlue]{
+  colback=#1!4,colframe=#1!55,
+  title={\textbf{#2}},fonttitle=\small,breakable,left=4pt,right=4pt}
+\newtcolorbox{resultbox}[1][]{
+  colback=ForestGreen!5,colframe=ForestGreen!50,
+  title={#1},fonttitle=\bfseries\small,breakable}
+\newtcolorbox{failbox}[1][]{
+  colback=BrickRed!5,colframe=BrickRed!45,
+  title={#1},fonttitle=\bfseries\small,breakable}
 
-%% ============================================================
+%%============================================================
 \begin{document}
-%% ============================================================
+%%============================================================
 
-% ---- PAGE DE TITRE ----
 \begin{titlepage}
-\centering
-\vspace*{1cm}
-{\Huge\bfseries\color{NavyBlue}Contrôle d'un Jeu Vidéo\\[0.3em]par Gestes de la Main\par}
-\vspace{0.6cm}
-\rule{0.6\linewidth}{1.5pt}
-\vspace{0.4cm}
-{\large\itshape Vision par Ordinateur — Cours d'Initiation\\Master 2 Mathématiques, 2025--2026\par}
-\vspace{1.2cm}
+\centering\vspace*{1cm}
+{\Huge\bfseries\color{NavyBlue}
+Controle d'un Jeu Video par Gestes de la Main\par}
+\vspace{0.6cm}\rule{0.6\linewidth}{1.5pt}\vspace{0.4cm}
+{\large\itshape
+Vision par Ordinateur -- Cours d'Initiation\\
+Master 2 Mathematiques, 2025--2026\par}
+\vspace{1cm}
 \begin{tikzpicture}
 \node[draw=NavyBlue,rounded corners=8pt,fill=NavyBlue!5,
-      minimum width=11cm,minimum height=2cm,align=center,font=\large] at (0,0)
-  {Webcam $\;\longrightarrow\;$ MediaPipe $\;\longrightarrow\;$ CNN $\;\longrightarrow\;$ WebSocket $\;\longrightarrow\;$ Jeu};
+      minimum width=11.5cm,minimum height=1.8cm,
+      align=center,font=\normalsize] at (0,0)
+  {Webcam $\;\longrightarrow\;$ MediaPipe $\;\longrightarrow\;$
+   Reseau de neurones $\;\longrightarrow\;$ WebSocket $\;\longrightarrow\;$ Jeu};
 \end{tikzpicture}
 \vspace{1.2cm}
 {\large\begin{tabular}{ll}
 \textbf{Auteurs} & Christ Bohou \\
                  & Djafarou Oulare \\[0.5em]
-\textbf{Dépôt}  & \url{https://github.com/bohouchrist/projet_computer_vision} \\[0.5em]
-\textbf{Date}   & Mars 2026
+\textbf{Depot}   & \url{https://github.com/bohouchrist/projet_computer_vision}\\[0.5em]
+\textbf{Date}    & Mars 2026
 \end{tabular}\par}
 \vfill
-{\small\itshape Ce rapport présente un système complet de reconnaissance de gestes
-en temps réel appliqué au contrôle du jeu Space Invaders dans un navigateur web.
-Il documente quatre approches expérimentées, les choix architecturaux et les résultats obtenus.}
+\begin{tcolorbox}[colback=gray!5,colframe=gray!30,width=0.92\linewidth]
+\small\textbf{Resume.}
+Ce projet consiste a controler le jeu Space Invaders par des gestes
+de la main captures en temps reel via une webcam.
+Trois approches ont ete experimentees :
+un CNN sur images brutes (Christ Bohou, echec a 34.3\%),
+un MLP et un CNN sur un dataset Kaggle (Djafarou Oulare, quasi-100\% en validation
+mais non generalisable en conditions reelles),
+et un reseau dense sur les coordonnees de la main extraites par MediaPipe
+(Christ Bohou, 99.6\%, solution deployee).
+\end{tcolorbox}
 \end{titlepage}
 
 \tableofcontents
 \newpage
 
-%% ============================================================
-\section{Introduction et Contexte}
-%% ============================================================
+%%============================================================
+\section{Introduction et Objectif}
+%%============================================================
 
-Ce projet a pour objectif de concevoir un système de \textbf{reconnaissance de gestes
-en temps réel} permettant de contrôler le jeu classique \textit{Space Invaders}
-directement par des mouvements de la main devant une webcam standard.
+L'objectif est de concevoir un \textbf{systeme complet de reconnaissance
+de gestes en temps reel} pour jouer a Space Invaders sans clavier ni souris.
+Ce projet couvre l'ensemble de la chaine de vision par ordinateur :
+collecte de donnees, entrainement de reseaux de neurones, et integration
+dans une application temps reel.
 
-Il s'inscrit dans le cadre d'un cours d'initiation à la vision par ordinateur en
-Master 2 Mathématiques, où les compétences clés à démontrer sont : la collecte de
-données visuelles, la construction et l'entraînement de réseaux de neurones, et
-leur intégration dans un pipeline temps réel.
+\subsection{Gestes reconnus}
 
-\subsection{Objectifs techniques}
-
-\begin{enumerate}
-  \item Détecter et classifier 5 gestes de la main en temps réel à au moins 25 fps.
-  \item Transmettre les commandes au jeu via WebSocket avec une latence inférieure à 100\,ms.
-  \item Atteindre une précision de classification suffisante pour une jouabilité fluide.
-\end{enumerate}
-
-\subsection{Gestes retenus}
-
-\begin{keybox}[Dictionnaire de gestes — version finale]
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{cllc}
 \toprule
-\textbf{Photo} & \textbf{Geste} & \textbf{Description} & \textbf{Commande} \\
+\textbf{Photo} & \textbf{Classe} & \textbf{Description} & \textbf{Action} \\
 \midrule
 \includegraphics[height=1.1cm]{cnn_training/modeles/images_rapport/LEFT.png}
-  & \textbf{LEFT}
-  & Main droite, index pointé vers la gauche
-  & \texttt{LEFT} \\
+  & LEFT & Main droite, index pointe vers la gauche & Deplacer gauche \\
 \includegraphics[height=1.1cm]{cnn_training/modeles/images_rapport/RIGHT.png}
-  & \textbf{RIGHT}
-  & Main gauche, index pointé vers la droite
-  & \texttt{RIGHT} \\
+  & RIGHT & Main gauche, index pointe vers la droite & Deplacer droite \\
 \includegraphics[height=1.1cm]{cnn_training/modeles/images_rapport/FIRE.png}
-  & \textbf{FIRE}
-  & Poing fermé (knuckles face caméra)
-  & \texttt{FIRE} \\
+  & FIRE & Poing ferme, knuckles face camera & Tirer \\
 \includegraphics[height=1.1cm]{cnn_training/modeles/images_rapport/ENTER.png}
-  & \textbf{ENTER}
-  & Paume ouverte face caméra
-  & \texttt{ENTER} \\
+  & ENTER & Paume ouverte face camera & Demarrer \\
 \includegraphics[height=1.1cm]{cnn_training/modeles/images_rapport/NEUTRAL.png}
-  & \textbf{NEUTRAL}
-  & Main au repos (aucune commande)
-  & — \\
+  & NEUTRAL & Main au repos & Aucune action \\
 \bottomrule
 \end{tabular}
 \end{center}
-\end{keybox}
 
-%% ============================================================
-\section{Architecture Globale du Système}
-%% ============================================================
-
-\subsection{Vue d'ensemble}
-
-Le système repose sur quatre processus indépendants communiquant en temps réel :
+\subsection{Vue d'ensemble du systeme deploye}
 
 \begin{figure}[h!]
 \centering
 \begin{tikzpicture}[
-  node distance=0.5cm and 0.3cm,
   box/.style={draw=NavyBlue,fill=NavyBlue!7,rounded corners=5pt,
-              minimum width=2.6cm,minimum height=1.1cm,align=center,font=\small},
-  arr/.style={-{Latex},thick,color=NavyBlue!70},
-  lbl/.style={font=\tiny\itshape,color=gray,midway,above}
-]
-\node[box] (cam) {Webcam\\30 fps};
-\node[box,right=1.1cm of cam] (mp) {MediaPipe\\HandLandmarker};
-\node[box,right=1.1cm of mp]  (cnn){Réseau dense\\TensorFlow};
-\node[box,right=1.1cm of cnn] (ws) {WebSocket\\Node.js :8765};
-\node[box,right=1.1cm of ws]  (jeu){Space Invaders\\JS :8000};
-
-\draw[arr] (cam) -- node[lbl]{BGR→RGB} (mp);
-\draw[arr] (mp)  -- node[lbl]{63 coords} (cnn);
-\draw[arr] (cnn) -- node[lbl]{classe} (ws);
-\draw[arr] (ws)  -- node[lbl]{keydown} (jeu);
+              minimum width=2.7cm,minimum height=1.1cm,
+              align=center,font=\small},
+  arr/.style={-{Latex},thick,NavyBlue!70},
+  lbl/.style={font=\tiny\itshape,color=gray,above}]
+\node[box](cam){Webcam\\30 fps};
+\node[box,right=1.0cm of cam](mp){MediaPipe\\21 landmarks};
+\node[box,right=1.0cm of mp](cnn){Reseau dense\\TensorFlow};
+\node[box,right=1.0cm of cnn](ws){WebSocket\\Node.js};
+\node[box,right=1.0cm of ws](jeu){Space Invaders\\Navigateur};
+\draw[arr](cam)--node[lbl]{BGR$\to$RGB}(mp);
+\draw[arr](mp)--node[lbl]{63 coords}(cnn);
+\draw[arr](cnn)--node[lbl]{classe}(ws);
+\draw[arr](ws)--node[lbl]{keydown}(jeu);
 \end{tikzpicture}
-\caption{Pipeline complet de contrôle gestuel en temps réel.}
+\caption{Pipeline complet de controle gestuel en temps reel.}
 \end{figure}
 
-\subsection{MediaPipe HandLandmarker}
-
-MediaPipe HandLandmarker est un modèle de détection de la main pré-entraîné par
-Google, basé sur une architecture MobileNet légère. Il opère en deux étapes :
-\begin{enumerate}
-  \item \textbf{BlazePalm} : détecte la région de la main dans l'image en moins de 5\,ms.
-  \item \textbf{Estimation des landmarks} : prédit les coordonnées $(x, y, z)$ de
-        \textbf{21 points anatomiques} (poignet, phalanges proximal/médial/distal de
-        chaque doigt) avec une incertitude inférieure à 2\,mm.
-\end{enumerate}
-
-En mode \texttt{VIDEO}, un tracker léger entre les frames évite la ré-détection à
-chaque image, permettant un traitement à 30+ fps sur CPU sans GPU.
+\subsection{Synthese des trois approches}
 
 \begin{center}
-\small
-\begin{tabular}{ll}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{clcc}
 \toprule
-\textbf{Paramètre} & \textbf{Valeur} \\
+& \textbf{Approche} & \textbf{Val. accuracy} & \textbf{Jouable} \\
 \midrule
-min\_hand\_detection\_confidence & 0.6 \\
-min\_hand\_presence\_confidence  & 0.5 \\
-min\_tracking\_confidence        & 0.5 \\
-num\_hands                       & 1 \\
+1 & CNN sur images brutes -- Christ Bohou & 34.3\% & Non \\
+2 & MLP + CNN Kaggle -- Djafarou Oulare & $\sim$100\% & Non \\
+3 & \textbf{Reseau dense sur landmarks -- Christ Bohou} & \textbf{99.6\%} & \textbf{Oui} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection{Architecture logicielle — threading Python}
+\newpage
+%%============================================================
+\section{Approche 1 : CNN sur Images Brutes}
+%%============================================================
 
-Le script principal \texttt{5\_jouer\_avec\_cnn.py} utilise une architecture
-bi-thread pour éviter que le WebSocket bloque la capture vidéo :
+\begin{approchebox}[BrickRed]{Approche 1 | Christ Bohou | ECHEC -- val\_accuracy 34.3\%}
+Entrainement d'un CNN directement sur des images 64$\times$64 pixels
+captures a la webcam. Le modele memorise le fond de la piece
+et ne generalise pas.
+\end{approchebox}
 
-\begin{lstlisting}[caption={Communication inter-threads par file de messages (extrait).}]
-import queue, threading, json, websocket
+\subsection{Collecte des donnees}
 
-commande_queue = queue.Queue(maxsize=20)
+Le script \texttt{1\_collecter\_images.py} capture automatiquement
+une image toutes les 300\,ms. Chaque image est redimensionnee en 64$\times$64 pixels RGB.
 
-def thread_websocket(ws_uri):
-    """Thread dedie a l'envoi WebSocket - ne bloque pas la video."""
-    ws = websocket.WebSocket()
-    ws.connect(ws_uri)
-    while True:
-        msg = commande_queue.get(timeout=0.5)
-        ws.send(json.dumps(msg))
-
-# Lancement du thread WS en arriere-plan
-t = threading.Thread(target=thread_websocket, args=(WS_URI,), daemon=True)
-t.start()
-
-# Thread principal : webcam + MediaPipe + CNN
-while True:
-    ret, frame = cap.read()
-    ...
-    commande_queue.put_nowait({'type': geste})  # non-bloquant
-\end{lstlisting}
-
-\subsection{Hold Timer — serveur Node.js}
-
-Le jeu JavaScript attend des événements \texttt{keydown}/\texttt{keyup}
-continus, alors que Python envoie des commandes discrètes (30 fois/seconde).
-Le serveur Node.js résout ce décalage avec un \textbf{hold timer de 180\,ms} :
-
-\begin{lstlisting}[language=Java,caption={Hold timer Node.js ? maintient la touche enfonc?e tant que la commande arrive.}]
-const HOLD_TIMEOUT = 180; // ms
-const timers = {};
-
-function handleCommand(type) {
-  if (timers[type]) clearTimeout(timers[type]); // remet le compteur a zero
-  else sendKeyDown(KEYMAP[type]);                // premiere arrivee = keydown
-
-  timers[type] = setTimeout(() => {
-    sendKeyUp(KEYMAP[type]);                     // plus de signal = keyup
-    delete timers[type];
-  }, HOLD_TIMEOUT);
-}
-\end{lstlisting}
-
-%% ============================================================
-\section{Collecte et Préparation des Données}
-%% ============================================================
-
-\subsection{Approche 1 — Images brutes 64×64 (Christ Bohou)}
-
-Le script \texttt{1\_collecter\_images.py} capture automatiquement une image
-toutes les 300\,ms via OpenCV pendant que l'utilisateur maintient un geste.
-Chaque image est redimensionnée en 64×64 pixels RGB et sauvegardée en JPEG.
-
-\begin{lstlisting}[caption={Capture automatique avec d?lai fixe (extrait).}]
-AUTO_DELAY = 0.3  # secondes entre chaque capture automatique
+\begin{lstlisting}[caption={Capture automatique d'images brutes.}]
 IMG_SIZE   = 64
+AUTO_DELAY = 0.3   # secondes entre deux captures
 
 ret, frame = cap.read()
-frame = cv2.flip(frame, 1)  # miroir horizontal (webcam)
+frame = cv2.flip(frame, 1)
 img = cv2.resize(frame, (IMG_SIZE, IMG_SIZE))
 img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-nom = f"{classe}_{compteur:04d}.jpg"
-cv2.imwrite(os.path.join(dossier_classe, nom), img_rgb)
+cv2.imwrite(os.path.join(dossier, f"{classe}_{n:04d}.jpg"), img_rgb)
 \end{lstlisting}
 
 \begin{center}
 \begin{tabular}{lcc}
 \toprule
-\textbf{Classe} & \textbf{Images} & \textbf{Proportion} \\
+Classe & Images & Proportion \\
 \midrule
-LEFT    & 502 & 19.9\% \\
-RIGHT   & 516 & 20.5\% \\
-FIRE    & 520 & 20.6\% \\
-ENTER   & 520 & 20.6\% \\
-NEUTRAL & 463 & 18.4\% \\
+LEFT    & 502  & 19.9\% \\
+RIGHT   & 516  & 20.5\% \\
+FIRE    & 520  & 20.6\% \\
+ENTER   & 520  & 20.6\% \\
+NEUTRAL & 463  & 18.4\% \\
 \midrule
 \textbf{Total} & \textbf{2\,521} & 100\% \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection{Approche 2 — Landmarks normalisés (Christ Bohou)}
+\subsection{Architecture du modele}
 
-Le script \texttt{3\_collecter\_landmarks.py} utilise MediaPipe en mode
-\texttt{VIDEO} pour extraire les 21 landmarks par frame et les sauvegarde
-en CSV après normalisation.
-
-\paragraph{Normalisation des landmarks.}
-Pour chaque frame, le vecteur brut $\mathbf{p} \in \mathbb{R}^{21 \times 3}$
-est transformé par :
-
-\begin{equation}
-\tilde{\mathbf{p}}_i = \frac{\mathbf{p}_i - \mathbf{p}_0}
-                            {\displaystyle\max_{j} \|\mathbf{p}_j - \mathbf{p}_0\|_\infty}
-\end{equation}
-
-où $\mathbf{p}_0$ est la position du poignet (landmark 0). Le résultat
-$\tilde{\mathbf{p}} \in [-1, 1]^{21 \times 3}$, aplati en un vecteur de 63 valeurs,
-est invariant à la position, l'échelle et la taille de la main.
-
-\begin{lstlisting}[caption={Normalisation des landmarks ? identique ? l'entra?nement et ? l'inf?rence.}]
-def normaliser(landmarks):
-    pts = np.array([[lm.x, lm.y, lm.z] for lm in landmarks],
-                   dtype=np.float32)
-    pts -= pts[0]              # centrage sur le poignet
-    s = np.max(np.abs(pts))
-    if s > 0:
-        pts /= s               # mise a l'echelle dans [-1, 1]
-    return pts.flatten()       # vecteur de 63 valeurs
-\end{lstlisting}
-
-Environ \textbf{2\,100 échantillons} ont été collectés à raison d'une capture
-automatique toutes les 300\,ms, soit environ 7 minutes de collecte par classe.
-La même normalisation est appliquée à l'identique lors de l'inférence temps réel,
-garantissant la cohérence entre entraînement et déploiement.
-
-\subsection{Approche 3 — Dataset Kaggle (Djafarou Oulare)}
-
-En parallèle, un dataset externe Kaggle (\textit{Hand Navigation Landmarks},
-harisudhan411) a été exploité. Il contient 8\,000 images 180×180 en 4 classes
-(left, right, up, down) photographiées sur fond blanc uniforme.
-
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.85\textwidth]{cnn_training/modeles/images_rapport/distribution_kaggle.png}
-\caption{Distribution des classes du dataset Kaggle (Djafarou Oulare).
-Jeu parfaitement équilibré : 2\,000 images par classe en train,
-100 en validation, 300 en test.}
-\end{figure}
-
-\paragraph{Prétraitement (Djafarou).}
-Les images sont chargées avec \texttt{tf.keras.utils.image\_dataset\_from\_directory},
-normalisées par division par 255 (\texttt{tf.cast(image, tf.float32)/255.0}),
-puis les labels sont encodés en vecteurs one-hot :
-\begin{lstlisting}[caption={Pr?traitement du dataset Kaggle (Djafarou).}]
-def normaliser(image, label):
-    return tf.cast(image, tf.float32) / 255.0, label
-
-def one_hot_label(image, label):
-    return image, tf.one_hot(label, num_classes=4)
-
-train_ds = train_ds.map(normaliser).map(one_hot_label)
-val_ds   = val_ds.map(normaliser).map(one_hot_label)
-test_ds  = test_ds.map(normaliser).map(one_hot_label)
-\end{lstlisting}
-
-%% ============================================================
-\section{Modèles de Classification}
-%% ============================================================
-
-Quatre modèles ont été expérimentés au total : deux par Christ Bohou
-(CNN images brutes, réseau dense sur landmarks) et deux par Djafarou Oulare
-(MLP et CNN sur images Kaggle).
-
-\subsection{Modèle 1 — CNN sur images brutes (Christ Bohou)}
-
-\subsubsection{Architecture}
-
-Un CNN à 3 blocs convolutifs avec data augmentation en ligne a été construit.
-
-\begin{lstlisting}[caption={Architecture CNN 3 blocs (2\_entrainer\_cnn.py).}]
+\begin{lstlisting}[caption={Architecture CNN 3 blocs avec BatchNorm et Dropout.}]
 modele = models.Sequential([
-    # Bloc 1 - detection de contours simples
-    layers.Conv2D(32, (3,3), activation='relu', padding='same',
-                  input_shape=(64, 64, 3)),
+    # Bloc 1 - contours et textures simples
+    layers.Conv2D(32,(3,3),activation='relu',padding='same',
+                  input_shape=(64,64,3)),
     layers.BatchNormalization(),
-    layers.Conv2D(32, (3,3), activation='relu', padding='same'),
-    layers.MaxPooling2D(2, 2),
+    layers.Conv2D(32,(3,3),activation='relu',padding='same'),
+    layers.MaxPooling2D(2,2),
     layers.Dropout(0.25),
-
-    # Bloc 2 - detection de formes (doigts, paume)
-    layers.Conv2D(64, (3,3), activation='relu', padding='same'),
+    # Bloc 2 - formes complexes
+    layers.Conv2D(64,(3,3),activation='relu',padding='same'),
     layers.BatchNormalization(),
-    layers.Conv2D(64, (3,3), activation='relu', padding='same'),
-    layers.MaxPooling2D(2, 2),
+    layers.Conv2D(64,(3,3),activation='relu',padding='same'),
+    layers.MaxPooling2D(2,2),
     layers.Dropout(0.25),
-
-    # Bloc 3 - patterns complexes (configuration de la main)
-    layers.Conv2D(128, (3,3), activation='relu', padding='same'),
+    # Bloc 3 - configurations de main
+    layers.Conv2D(128,(3,3),activation='relu',padding='same'),
     layers.BatchNormalization(),
-    layers.MaxPooling2D(2, 2),
+    layers.MaxPooling2D(2,2),
     layers.Dropout(0.25),
-
-    # Tete de classification
+    # Classification
     layers.Flatten(),
     layers.Dense(256, activation='relu'),
     layers.BatchNormalization(),
     layers.Dropout(0.5),
     layers.Dense(5, activation='softmax'),   # 5 classes
 ])
+modele.compile(optimizer='adam',
+               loss='sparse_categorical_crossentropy',
+               metrics=['accuracy'])
 \end{lstlisting}
 
-\textbf{Total paramètres entraînables : 2\,240\,037.}
+\textbf{Parametres entraenables : 2\,240\,037.}
 
-\subsubsection{Data Augmentation}
+Data augmentation : flip horizontal, rotation $\pm$15\%, zoom $\pm$15\%,
+luminosite $\pm$20\%, contraste $\pm$20\% -- appliques en ligne sur chaque batch.
+EarlyStopping patience=8, ReduceLROnPlateau factor=0.5, split 80/20, batch 32, max 30 epochs.
 
-Pour compenser la faible taille du dataset (2\,521 images), une augmentation
-de données en ligne est appliquée à chaque batch pendant l'entraînement :
+\subsection{Resultats}
 
-\begin{lstlisting}[caption={Pipeline d'augmentation de donn?es.}]
-augmentation = tf.keras.Sequential([
-    layers.RandomFlip("horizontal"),     # miroir horizontal
-    layers.RandomRotation(0.15),         # rotation +/- 15%
-    layers.RandomZoom(0.15),             # zoom +/- 15%
-    layers.RandomBrightness(0.2),        # luminosite +/- 20%
-    layers.RandomContrast(0.2),          # contraste +/- 20%
-])
-\end{lstlisting}
-
-\subsubsection{Callbacks et régularisation}
-
-\begin{lstlisting}[caption={Callbacks d'entra?nement.}]
-cb_list = [
-    callbacks.EarlyStopping(
-        monitor='val_accuracy', patience=8,
-        restore_best_weights=True),           # arret si stagnation
-    callbacks.ModelCheckpoint(
-        filepath=MODEL_PATH,
-        monitor='val_accuracy', save_best_only=True),
-    callbacks.ReduceLROnPlateau(
-        monitor='val_loss', factor=0.5,
-        patience=4, min_lr=1e-6),             # reduction lr si val_loss stagne
-]
-\end{lstlisting}
-
-\subsubsection{Résultats}
-
-\begin{failbox}[Résultat — CNN images brutes (Christ Bohou)]
-\textbf{Meilleure val\_accuracy : 34.3\%} (époque 14 sur 22 avant early stopping).\\
-Précision chance aléatoire : 20\% (5 classes équiréparties).\\
-Le modèle n'apprend pas à généraliser au-delà du hasard.
+\begin{failbox}[Echec -- CNN images brutes]
+\textbf{Meilleure val\_accuracy : 34.3\%} a l'epoque 14 sur 22.
+Niveau chance aleatoire : 20\% pour 5 classes.
 \end{failbox}
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.85\textwidth]{cnn_training/modeles/images_rapport/courbes_cnn_images_brutes.png}
-\caption{Courbes d'entraînement du CNN images brutes. La précision de validation
-stagne autour de 20\% (niveau aléatoire) avec un pic isolé à 34.3\% à l'époque 14.
-Aucune convergence stable n'est atteinte.}
+\includegraphics[width=0.9\textwidth]{cnn_training/modeles/courbes_entrainement.png}
+\caption{Courbes d'entrainement -- CNN images brutes.
+Precision de validation stagnant autour de 20\% avec un seul pic isole a 34.3\%.
+Aucune convergence stable.}
 \end{figure}
 
-\paragraph{Analyse de l'échec.}
-Le CNN apprend à reconnaître le fond de la pièce autant que la forme de la main.
-Avec 2\,521 images collectées dans un seul environnement d'éclairage, le modèle
-mémorise des artefacts contextuels (couleur du mur, ombres) plutôt que la
-géométrie de la main. Il en résulte une généralisation quasi nulle.
+\paragraph{Analyse.}
+Le CNN apprend les correlations spurieuses entre le fond de la piece et la classe.
+Avec seulement 2\,521 images dans un seul environnement, le modele memorise
+les couleurs du mur et les ombres plutot que la geometrie de la main.
+Pour generaliser, un CNN sur pixels bruts necessite des dizaines de milliers
+d'images dans des contextes varies.
 
-\subsection{Modèle 2 — MLP sur images Kaggle (Djafarou Oulare)}
+\newpage
+%%============================================================
+\section{Approche 2 : MLP et CNN sur Images Kaggle}
+%%============================================================
 
-\subsubsection{Architecture}
+\begin{approchebox}[orange!70!black]{Approche 2 | Djafarou Oulare | 100\% en labo, inutilisable en reel}
+Dataset externe sur fond blanc, deux modeles testes.
+Performances quasi-parfaites en validation, echec complet en conditions reelles.
+\end{approchebox}
 
-Un perceptron multicouche (MLP) minimaliste est construit sur les images
-180×180×3 aplaties en vecteur 1D :
+\subsection{Collecte des donnees}
 
-\begin{lstlisting}[caption={Architecture MLP sur images 180?180 (Djafarou).}]
+Dataset \textit{Hand Navigation Landmarks} (Kaggle) :
+images de mains sur fond blanc uniforme, 180$\times$180 pixels, 4 classes.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.85\textwidth]{cnn_training/modeles/images_rapport/distribution_kaggle.png}
+\caption{Distribution du dataset Kaggle.
+2\,000 images par classe en train, 100 en validation, 300 en test.}
+\end{figure}
+
+\begin{lstlisting}[caption={Chargement et pretraitement du dataset Kaggle.}]
+train_ds = tf.keras.utils.image_dataset_from_directory(
+    train_dir, class_names=['left','right','up','down'],
+    image_size=(180,180), batch_size=32)
+
+def normaliser(image, label):
+    return tf.cast(image, tf.float32) / 255.0, label
+def one_hot(image, label):
+    return image, tf.one_hot(label, depth=4)
+
+train_ds = train_ds.map(normaliser).map(one_hot)
+\end{lstlisting}
+
+\subsection{Modele MLP}
+
+\begin{lstlisting}[caption={Architecture MLP.}]
 model = keras.Sequential([
-    layers.Flatten(input_shape=(180, 180, 3)),  # 97200 entrees
+    layers.Flatten(input_shape=(180,180,3)),   # 97 200 entrees
     layers.Dense(128, activation='relu'),
-    layers.Dense(4, activation='softmax')       # 4 classes
+    layers.Dense(4, activation='softmax')
 ])
 model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-historique = model.fit(train_ds, validation_data=val_ds, epochs=100)
+              loss='categorical_crossentropy', metrics=['accuracy'])
+model.fit(train_ds, validation_data=val_ds, epochs=100)
 \end{lstlisting}
 
-\textbf{Paramètres : 12\,457\,348.}
-La couche Flatten génère un vecteur de 97\,200 dimensions, ce qui rend le modèle
-massivement surparamétré pour 4 classes.
+\textbf{Parametres : 12\,457\,348.}
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.85\textwidth]{cnn_training/modeles/images_rapport/courbes_mlp_kaggle.png}
-\caption{Courbes d'entraînement du MLP sur le dataset Kaggle (Djafarou).
-Convergence progressive sur 100 epochs.}
+\includegraphics[width=0.9\textwidth]{cnn_training/modeles/images_rapport/courbes_mlp_kaggle.png}
+\caption{Courbes MLP -- convergence sur 100 epochs sur le dataset Kaggle.}
 \end{figure}
 
-\subsection{Modèle 3 — CNN sur images Kaggle (Djafarou Oulare)}
+\subsection{Modele CNN}
 
-\subsubsection{Architecture}
-
-\begin{lstlisting}[caption={Architecture CNN Kaggle (Djafarou).}]
+\begin{lstlisting}[caption={Architecture CNN Kaggle.}]
 model_cnn = Sequential([
-    Conv2D(32, (3,3), activation='relu', input_shape=(180,180,3)),
-    MaxPooling2D(pool_size=(2,2)),
-    Conv2D(64, (3,3), activation='relu'),
-    MaxPooling2D(pool_size=(2,2)),
-    Flatten(),
+    Conv2D(32,(3,3),activation='relu',input_shape=(180,180,3)),
+    MaxPooling2D(2,2),
+    Conv2D(64,(3,3),activation='relu'),
+    MaxPooling2D(2,2),
+    Flatten(),               # 118 336 valeurs
     Dense(128, activation='relu'),
     Dropout(0.5),
-    Dense(4, activation='softmax')             # 4 classes
+    Dense(4, activation='softmax')
 ])
 model_cnn.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
-history_cnn = model_cnn.fit(train_ds, validation_data=val_ds, epochs=10)
+                  loss='categorical_crossentropy', metrics=['accuracy'])
+model_cnn.fit(train_ds, validation_data=val_ds, epochs=10)
 \end{lstlisting}
 
-\textbf{Paramètres : 15\,167\,044} dont 15\,147\,136 dans la seule couche Dense
-(118\,336 → 128), ce qui révèle un goulot d'étranglement architectural.
+\textbf{Parametres : 15\,167\,044} dont 15\,147\,136 dans la seule couche Dense.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.85\textwidth]{cnn_training/modeles/images_rapport/courbes_cnn_kaggle.png}
-\caption{Courbes d'entraînement du CNN Kaggle (Djafarou).
-Convergence rapide vers 100\% en 10 epochs sur le dataset à fond blanc.}
+\includegraphics[width=0.9\textwidth]{cnn_training/modeles/images_rapport/courbes_cnn_kaggle.png}
+\caption{Courbes CNN Kaggle -- 100\% en 10 epochs sur fond blanc.}
 \end{figure}
 
-\begin{failbox}[Limites communes des approches pixel]
-Les trois modèles travaillant sur des pixels bruts souffrent du même problème :
-ils apprennent des \emph{corrélations spurieuses} entre le fond et la classe.
-Un modèle entraîné sur fond blanc (Kaggle) prédit \textbf{«up» à 99.8\%}
-sur n'importe quelle image aléatoire — il n'a pas appris la forme de la main
-mais les statistiques du fond blanc.
+\subsection{Limite critique}
+
+\begin{failbox}[Distribution shift -- inutilisable en conditions reelles]
+Les deux modeles atteignent $\sim$100\% sur Kaggle (fond blanc)
+mais \textbf{echouent sur une webcam reelle}.\\
+Test concret : le CNN Kaggle predit \texttt{up} a 99.8\% sur une image
+aleatoire de bruit pur -- il a appris le fond blanc, pas les mains.
 \end{failbox}
 
-\subsection{Modèle 4 — Réseau Dense sur Landmarks (Christ Bohou) — Solution retenue}
+Ce phenomene est le \textbf{distribution shift} : l'ecart entre la
+distribution d'entrainement (fond blanc controlee) et la distribution
+reelle (fond de piece, eclairage variable) empeche toute generalisation.
 
-\subsubsection{Principe et motivation}
+\newpage
+%%============================================================
+\section{Approche 3 : Reseau Dense sur Landmarks MediaPipe}
+%%============================================================
 
-Au lieu de traiter les pixels, on extrait d'abord la représentation géométrique
-de la main (landmarks MediaPipe), puis on entraîne un réseau dense sur ces
-coordonnées normalisées. La représentation obtenue est :
-\begin{itemize}
-  \item \textbf{invariante au fond} : aucune information de pixel
-  \item \textbf{invariante à la luminosité et à la couleur de peau}
-  \item \textbf{invariante à la taille} et à la distance à la caméra (normalisation)
-  \item \textbf{compacte} : 63 réels au lieu de $64 \times 64 \times 3 = 12\,288$
-\end{itemize}
+\begin{approchebox}[ForestGreen]{Approche 3 | Christ Bohou | 99.6\% -- Solution deployee}
+Extraction de la geometrie de la main par MediaPipe puis classification
+du vecteur de coordonnees normalise. Invariant au fond, a l'eclairage
+et a la taille de la main.
+\end{approchebox}
 
-\subsubsection{Architecture complète}
+\subsection{MediaPipe HandLandmarker}
 
-\begin{lstlisting}[caption={Architecture du r?seau dense sur landmarks (4\_entrainer\_landmarks.py).}]
+Modele pre-entraine de Google (MobileNet).
+Detecte 21 points anatomiques $(x,y,z)$ par image.
+En mode \texttt{VIDEO} : tracking leger entre frames, 30+ fps sur CPU.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Parametre & Valeur \\
+\midrule
+min\_hand\_detection\_confidence & 0.6 \\
+min\_hand\_presence\_confidence & 0.5 \\
+min\_tracking\_confidence & 0.5 \\
+Mode & VIDEO \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Collecte des donnees}
+
+\subsubsection{Normalisation geometrique}
+
+Pour chaque frame, le vecteur brut est normalise :
+
+\begin{equation}
+\tilde{\mathbf{p}}_i =
+\frac{\mathbf{p}_i - \mathbf{p}_0}
+{\max_{j} \|\mathbf{p}_j - \mathbf{p}_0\|_\infty}
+\end{equation}
+
+$\mathbf{p}_0$ = poignet. Resultat : $\tilde{\mathbf{p}} \in [-1,1]^{63}$,
+sans information de fond, couleur ou taille.
+
+\begin{lstlisting}[caption={Normalisation des landmarks.}]
+def normaliser(landmarks):
+    pts = np.array([[lm.x, lm.y, lm.z] for lm in landmarks],
+                   dtype=np.float32)
+    pts -= pts[0]           # centrage sur le poignet
+    s = np.max(np.abs(pts))
+    if s > 0: pts /= s     # mise a l'echelle [-1, 1]
+    return pts.flatten()   # vecteur de 63 valeurs
+\end{lstlisting}
+
+\textbf{Cette normalisation est rigoureusement identique
+lors de la collecte, de l'entrainement et de l'inference.}
+
+Volume : environ 2\,100 echantillons -- 7 minutes de capture par classe.
+
+\subsection{Architecture du modele}
+
+\begin{lstlisting}[caption={Reseau dense sur landmarks (4\_entrainer\_landmarks.py).}]
 model = keras.Sequential([
-    keras.Input(shape=(63,)),               # 21 points x 3 coords
+    keras.Input(shape=(63,)),          # 21 points x 3 coordonnees
 
     keras.layers.Dense(128, activation='relu'),
     keras.layers.BatchNormalization(),
@@ -575,9 +456,8 @@ model = keras.Sequential([
     keras.layers.BatchNormalization(),
     keras.layers.Dropout(0.2),
 
-    keras.layers.Dense(5, activation='softmax'),   # 5 classes
+    keras.layers.Dense(5, activation='softmax'),  # 5 classes
 ])
-
 model.compile(
     optimizer=keras.optimizers.Adam(learning_rate=0.001),
     loss='sparse_categorical_crossentropy',
@@ -585,374 +465,233 @@ model.compile(
 )
 \end{lstlisting}
 
-\textbf{Total paramètres : 33\,925} — soit 66 fois moins que le CNN images.
+\textbf{Parametres : 33\,925} -- 66 fois moins que l'Approche 1.
 
-\subsubsection{Entraînement}
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+Couche & Type & Sortie & Parametres \\
+\midrule
+Input & -- & 63 & 0 \\
+Dense+BN+Dropout & ReLU & 128 & 8\,576 \\
+Dense+BN+Dropout & ReLU & 128 & 16\,896 \\
+Dense+BN+Dropout & ReLU & 64 & 8\,320 \\
+Dense & Softmax & 5 & 325 \\
+\midrule
+\textbf{Total} & & & \textbf{33\,925} \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\begin{lstlisting}[caption={Boucle d'entra?nement avec callbacks.}]
-callbacks = [
-    keras.callbacks.ModelCheckpoint(
-        MODEL_PATH, monitor='val_accuracy', save_best_only=True),
-    keras.callbacks.EarlyStopping(
-        monitor='val_accuracy', patience=15,
-        restore_best_weights=True),
-    keras.callbacks.ReduceLROnPlateau(
-        monitor='val_loss', factor=0.5, patience=5),
-]
+\subsection{Entrainement}
 
+\begin{lstlisting}[caption={Entrainement avec callbacks.}]
 history = model.fit(
     X_train, y_train,
     epochs=50, batch_size=32,
     validation_data=(X_val, y_val),
-    callbacks=callbacks,
+    callbacks=[
+        keras.callbacks.ModelCheckpoint(
+            MODEL_PATH, monitor='val_accuracy', save_best_only=True),
+        keras.callbacks.EarlyStopping(
+            monitor='val_accuracy', patience=15,
+            restore_best_weights=True),
+        keras.callbacks.ReduceLROnPlateau(
+            monitor='val_loss', factor=0.5, patience=5),
+    ]
 )
 \end{lstlisting}
 
-Le modèle converge en \textbf{13 époques} sur les 50 max autorisées,
-avec un temps d'entraînement total inférieur à 30 secondes sur CPU.
+Split 80/20 -- 1\,599 train / 501 validation.
+Convergence a l'epoque 13. Temps total : moins de 30 secondes sur CPU.
 
-\subsubsection{Résultats}
+\subsection{Resultats}
 
-\begin{resultbox}[Résultat — Réseau dense sur landmarks (solution déployée)]
-\textbf{Meilleure val\_accuracy : 99.6\%} — 2 erreurs sur 501 échantillons.\\
-Convergence à l'époque 13. Temps total d'entraînement : < 30\,s sur CPU.
+\begin{resultbox}[Solution deployee -- val\_accuracy 99.6\%]
+\textbf{99.6\%} a l'epoque 13.
+2 erreurs sur 501 echantillons.
+Entrainement en moins de 30 secondes sur CPU.
 \end{resultbox}
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.85\textwidth]{cnn_training/modeles/courbes_landmarks.png}
-\caption{Courbes d'entraînement du réseau dense sur landmarks. La convergence
-est rapide (époque 13) et stable, sans sur-apprentissage. La validation
-suit l'entraînement de près.}
+\includegraphics[width=0.9\textwidth]{cnn_training/modeles/courbes_landmarks.png}
+\caption{Courbes -- reseau dense sur landmarks.
+Convergence rapide et stable. Pas de sur-apprentissage.}
 \end{figure}
 
-\paragraph{Matrice de confusion (501 échantillons de validation).}
-
 \begin{center}
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.3}
 \begin{tabular}{l|ccccc|c}
 \toprule
-\diagbox{\small\textbf{Réel}}{\small\textbf{Prédit}}
-  & ENTER & FIRE & LEFT & NEUTRAL & RIGHT & \textbf{Total} \\
+\diagbox{\small Reel}{\small Predit}
+  & ENTER & FIRE & LEFT & NEUTRAL & RIGHT & Total \\
 \midrule
-ENTER   & \cellcolor{ForestGreen!25}\textbf{100} & 0 & 0 & 0 & 0 & 100 \\
-FIRE    & 0 & \cellcolor{ForestGreen!25}\textbf{100} & 0 & 0 & 0 & 100 \\
-LEFT    & 0 & 0 & \cellcolor{ForestGreen!25}\textbf{100} & 0 & 0 & 100 \\
-NEUTRAL & 0 & 1 & 1 & \cellcolor{ForestGreen!15}\textbf{99} & 0 & 101 \\
-RIGHT   & 0 & 0 & 0 & 0 & \cellcolor{ForestGreen!25}\textbf{100} & 100 \\
+ENTER   & \cellcolor{ForestGreen!20}\textbf{100} & 0 & 0 & 0 & 0 & 100 \\
+FIRE    & 0 & \cellcolor{ForestGreen!20}\textbf{100} & 0 & 0 & 0 & 100 \\
+LEFT    & 0 & 0 & \cellcolor{ForestGreen!20}\textbf{100} & 0 & 0 & 100 \\
+NEUTRAL & 0 & 1 & 1 & \cellcolor{ForestGreen!10}\textbf{99} & 0 & 101 \\
+RIGHT   & 0 & 0 & 0 & 0 & \cellcolor{ForestGreen!20}\textbf{100} & 100 \\
 \midrule
-\textbf{Total prédit} & 100 & 101 & 101 & 99 & 100 & 501 \\
+\textbf{Total} & 100 & 101 & 101 & 99 & 100 & \textbf{501} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Les 2 erreurs concernent uniquement la classe NEUTRAL, confondue une fois avec
-FIRE et une fois avec LEFT. Explication géométrique : une main en position de
-repos partielle (doigts semi-fléchis) produit un vecteur de landmarks proche
-d'un poing ou d'un index semi-étendu.
+\subsection{Integration dans le jeu}
 
-%% ============================================================
-\section{Comparaison des Approches}
-%% ============================================================
-
-\begin{table}[h!]
-\centering
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\linewidth}{Xcccc}
-\toprule
-\textbf{Critère}
-  & \textbf{CNN images}
-  & \textbf{MLP Kaggle}
-  & \textbf{CNN Kaggle}
-  & \textbf{Dense landmarks} \\
-\midrule
-Val. accuracy            & 34.3\%  & $\sim$90\% & $\sim$100\% & \textbf{99.6\%} \\
-Perf. en conditions réelles & Mauvaise & Mauvaise  & Mauvaise    & \textbf{Bonne} \\
-Paramètres               & 2.24\,M & 12.5\,M   & 15.2\,M     & \textbf{33\,925} \\
-Temps/epoch (CPU)        & $\sim$16\,s & $\sim$60\,s & $\sim$45\,s & \textbf{< 1\,s} \\
-Données nécessaires      & $>$50\,k & 8\,000 (ext.) & 8\,000 (ext.) & \textbf{$\sim$2\,000} \\
-Sensibilité au fond      & Critique & Critique  & Critique    & \textbf{Nulle} \\
-Invariant taille main    & Non     & Non       & Non         & \textbf{Oui} \\
-Dataset propre           & Oui     & Non       & Non         & \textbf{Oui} \\
-\bottomrule
-\end{tabularx}
-\caption{Comparaison des quatre approches expérimentées.}
-\end{table}
-
-\subsection{Leçon principale : la représentation avant le modèle}
-
-La comparaison la plus révélatrice est celle entre le CNN images brutes (34.3\%)
-et le réseau dense sur landmarks (99.6\%). Ces deux modèles opèrent dans des
-conditions identiques (même pièce, même webcam, mêmes gestes), mais la
-représentation de l'entrée est radicalement différente :
-
-\begin{center}
-\begin{tabular}{lcc}
-\toprule
-& \textbf{CNN images} & \textbf{Dense landmarks} \\
-\midrule
-Dimensionnalité entrée & $64 \times 64 \times 3 = 12\,288$ & $63$ \\
-Réduction              & \multicolumn{2}{c}{$\div\,195$} \\
-Paramètres modèle      & 2\,240\,037 & 33\,925 \\
-Réduction              & \multicolumn{2}{c}{$\div\,66$} \\
-Val. accuracy          & 34.3\% & \textbf{99.6\%} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Ce résultat illustre un principe fondamental de l'apprentissage automatique :
-\textit{une bonne représentation (encodant uniquement les informations pertinentes)
-vaut davantage qu'un modèle plus grand ou plus complexe.}
-
-%% ============================================================
-\section{Intégration Temps Réel et Déploiement}
-%% ============================================================
-
-\subsection{Pipeline d'inférence}
-
-La boucle d'inférence principale traite chaque frame en 3 étapes :
-
-\begin{lstlisting}[caption={Boucle d'inf?rence temps r?el (5\_jouer\_avec\_cnn.py).}]
-SEUIL_CONFIANCE = 0.70   # seuil pour envoyer une commande
+\begin{lstlisting}[caption={Boucle d'inference temps reel.}]
+SEUIL_CONFIANCE = 0.70
 
 while True:
     ret, frame = cap.read()
-    frame = cv2.flip(frame, 1)     # miroir webcam
-
-    # 1. Extraction des landmarks MediaPipe
-    rgb    = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    mp_img = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
-    result = landmarker.detect_for_video(mp_img, timestamp_ms)
-
+    frame = cv2.flip(frame, 1)
+    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    result = landmarker.detect_for_video(
+        mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb),
+        timestamp_ms)
     if result.hand_landmarks:
-        lm_list = result.hand_landmarks[0]
-
-        # 2. Normalisation (identique a l'entrainement)
-        vecteur = normaliser(lm_list).reshape(1, -1)
-
-        # 3. Inference CNN
-        probs     = model.predict(vecteur, verbose=0)[0]
-        idx       = np.argmax(probs)
-        confiance = probs[idx]
-        geste     = CLASSES[idx] if confiance >= SEUIL_CONFIANCE else None
-
-        # 4. Envoi si confiance suffisante
-        if geste and geste != 'NEUTRAL':
-            commande_queue.put_nowait({'type': geste})
+        vecteur = normaliser(result.hand_landmarks[0]).reshape(1,-1)
+        probs = model.predict(vecteur, verbose=0)[0]
+        idx = np.argmax(probs)
+        if probs[idx] >= SEUIL_CONFIANCE:
+            geste = CLASSES[idx]
+            if geste != 'NEUTRAL':
+                commande_queue.put_nowait({'type': geste})
 \end{lstlisting}
 
-\subsection{Cooldowns anti-spam}
+Architecture bi-thread : le thread principal gere la video et l'inference,
+un thread dedie gere l'envoi WebSocket sans bloquer la capture.
+Un hold timer de 180\,ms dans Node.js maintient la touche enfoncee
+entre deux commandes consecutives.
 
-Pour éviter l'envoi répété de commandes et les faux positifs de transition :
+\newpage
+%%============================================================
+\section{Comparaison et Discussion}
+%%============================================================
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{Xccc}
+\toprule
+\textbf{Critere}
+  & App. 1 CNN images
+  & App. 2 Kaggle
+  & App. 3 Landmarks \\
+\midrule
+Val. accuracy & 34.3\% & $\sim$100\% & \textbf{99.6\%} \\
+Conditions reelles & Non & Non & \textbf{Oui} \\
+Parametres & 2.24\,M & 15.2\,M & \textbf{33\,925} \\
+Entrainement CPU & 5 min & 15 min & \textbf{30 s} \\
+Donnees & 2\,521 propres & 8\,000 externes & \textbf{2\,100 propres} \\
+Sensible au fond & Oui & Oui & \textbf{Non} \\
+Dataset propre & Oui & Non & \textbf{Oui} \\
+\bottomrule
+\end{tabularx}
+\caption{Comparaison des trois approches.}
+\end{table}
+
+\subsection{La representation avant le modele}
+
+App. 1 vs App. 3 dans les memes conditions :
 
 \begin{center}
 \begin{tabular}{lcc}
 \toprule
-\textbf{Commande} & \textbf{Cooldown} & \textbf{Rôle} \\
+& App. 1 & App. 3 \\
 \midrule
-LEFT, RIGHT & 80\,ms & Mouvement fluide continu \\
-FIRE        & 80\,ms & Tir fréquent (cooldown jeu : 500\,ms) \\
-ENTER       & 800\,ms & Démarrage, une seule fois \\
-NEUTRAL     & — & Jamais envoyé \\
+Dimension entree & 12\,288 pixels & 63 coordonnees \\
+Parametres & 2\,240\,037 & 33\,925 \\
+Val. accuracy & 34.3\% & \textbf{99.6\%} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection{Correspondance des touches}
+Reduire la dimension par 195 et les parametres par 66 a permis de passer
+de l'echec a la quasi-perfection. Le facteur determinant n'est pas la
+complexite du modele mais la \textbf{pertinence de la representation}.
 
-Le serveur Node.js mappe les commandes texte en codes de touche standard :
+\subsection{Limites}
 
-\begin{center}
-\begin{tabular}{lcl}
-\toprule
-\textbf{Commande} & \textbf{Keycode} & \textbf{Touche} \\
-\midrule
-LEFT  & 37 & Flèche gauche \\
-RIGHT & 39 & Flèche droite \\
-FIRE  & 32 & Espace \\
-ENTER & 13 & Entrée \\
-\bottomrule
-\end{tabular}
-\end{center}
+\paragraph{FIRE moins robuste avec la main droite.}
+Donnees FIRE collectees principalement avec la main gauche.
+La main droite produit un vecteur symetrique ($x_i \to -x_i$)
+que le modele ne reconnait pas toujours.
 
-%% ============================================================
-\section{Résultats, Limites et Analyse Critique}
-%% ============================================================
+\paragraph{Impossibilite de tirer en se deplacant.}
+Une seule commande par frame -- LEFT et FIRE simultanement impossible.
 
-\subsection{Performance en conditions réelles}
+%%============================================================
+\section{Perspectives}
+%%============================================================
 
-Le réseau dense sur landmarks est \textbf{robuste en conditions réelles} :
-fond de pièce, éclairage variable, main de taille différente.
-Les gestes LEFT, RIGHT, ENTER et NEUTRAL sont reconnus sans erreur notable.
-La latence totale mesurée (capture → jeu) est de 40 à 80\,ms, imperceptible.
+\textbf{Classes composites.}
+Ajouter \texttt{LEFT\_FIRE} et \texttt{RIGHT\_FIRE} (poing incline)
+pour envoyer deux commandes simultanement.
 
-\subsection{Limites identifiées}
+\textbf{FIRE deux mains.}
+Recollecte avec les deux mains ou augmentation par symetrie ($x_i \to -x_i$).
 
-\paragraph{1. FIRE partiellement entraîné.}
-Les données de collecte pour le geste FIRE ont été capturées principalement
-avec la main gauche. En landmarks normalisés, la main droite effectuant le
-même geste produit un vecteur approximativement symétrique
-($x_i \to -x_i$), qui constitue une forme différente pour le réseau.
-La classification FIRE est donc moins fiable avec la main droite.
+\textbf{LSTM temporel.}
+Sequences de 5 a 10 frames pour gestes dynamiques
+et elimination des ambiguites statiques.
 
-\paragraph{2. Actions simultanées impossibles.}
-La classification étant unimodale (une classe par frame), le système ne peut
-envoyer qu'une commande à la fois. Tirer (\texttt{FIRE}) pendant un déplacement
-(\texttt{LEFT} ou \texttt{RIGHT}) est impossible avec l'architecture actuelle.
-
-\paragraph{3. NEUTRAL difficile à distinguer.}
-La classe NEUTRAL (main au repos) partage des configurations de landmarks
-proches avec FIRE (doigts semi-fléchis $\approx$ poing) et LEFT (position
-intermédiaire). Cela génère 2 des 2 erreurs de validation et quelques faux
-positifs en jeu réel.
-
-%% ============================================================
-\section{Perspectives d'Amélioration}
-%% ============================================================
-
-\subsection{Court terme — Classes composites pour tirer en se déplaçant}
-
-La limitation jouabilité la plus impactante est l'impossibilité de tirer
-en se déplaçant. La solution la plus simple est d'ajouter 2 nouvelles classes
-d'entraînement :
-
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-\textbf{Classe} & \textbf{Geste} & \textbf{Commandes envoyées} \\
-\midrule
-\texttt{LEFT\_FIRE}  & Poing incliné à gauche & LEFT + FIRE simultanés \\
-\texttt{RIGHT\_FIRE} & Poing incliné à droite & RIGHT + FIRE simultanés \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-La transition \texttt{LEFT} $\to$ \texttt{LEFT\_FIRE} consiste uniquement à
-fermer le poing sans déplacer le bras — geste naturel, peu fatigant, et
-géométriquement très différent de tous les autres en landmarks.
-
-\subsection{Court terme — Robustesse FIRE deux mains}
-
-Collecter le geste FIRE avec les deux mains à parts égales lors de la prochaine
-session de collecte. Alternativement, générer les échantillons main droite par
-augmentation de données ($x_i \to -x_i$, symétrie axiale), sans recollecte.
-
-\subsection{Moyen terme — LSTM pour gestes dynamiques}
-
-Entraîner sur des séquences temporelles de landmarks (5 à 10 frames)
-plutôt que sur une frame isolée. Cela permettrait de reconnaître des
-\emph{gestes dynamiques} (balayage de gauche à droite, fermeture rapide du poing)
-distincts des gestes statiques, réduisant les ambiguïtés géométriques.
-
-\begin{lstlisting}[caption={Architecture LSTM envisag?e pour gestes dynamiques.}]
-model = keras.Sequential([
-    keras.Input(shape=(10, 63)),     # 10 frames x 63 coords
-    keras.layers.LSTM(128, return_sequences=True),
-    keras.layers.LSTM(64),
-    keras.layers.Dense(32, activation='relu'),
-    keras.layers.Dense(n_classes, activation='softmax'),
-])
-\end{lstlisting}
-
-\subsection{Long terme — Deux mains simultanées}
-
-MediaPipe supporte jusqu'à 2 mains simultanément. En traitant les deux,
-on obtient naturellement 2 canaux de contrôle indépendants : par exemple,
-main gauche = direction continue, main droite = tir. Cela résout le problème
-de simultanéité de manière naturelle et intuitive.
-
-%% ============================================================
+%%============================================================
 \section{Conclusion}
-%% ============================================================
-
-Ce projet a permis de construire et déployer un pipeline complet de vision par
-ordinateur appliqué au jeu vidéo. Les conclusions techniques principales sont :
+%%============================================================
 
 \begin{enumerate}
-  \item \textbf{La représentation prime sur la complexité du modèle.}
-        Passer de $12\,288$ pixels à $63$ landmarks normalisés a fait passer
-        la précision de $34.3\%$ à $99.6\%$ avec un modèle 66 fois plus petit.
+\item \textbf{La representation est decisive.}
+      Pixels bruts $\to$ landmarks : dimension $\div 195$,
+      parametres $\div 66$, accuracy $34\% \to 99.6\%$.
 
-  \item \textbf{La généralisation dépend des données, pas du dataset.}
-        Un modèle entraîné sur 8\,000 images à fond blanc (Kaggle) ne fonctionne
-        pas en conditions réelles. Nos 2\,100 landmarks, collectés dans notre
-        propre environnement, donnent un modèle robuste et déployable.
+\item \textbf{Le score de validation ne garantit pas la generalisabilite.}
+      100\% sur Kaggle, 0\% en conditions reelles.
 
-  \item \textbf{L'ingénierie système est aussi importante que le modèle.}
-        Le threading Python, le hold timer Node.js et les cooldowns sont des
-        décisions d'ingénierie — sans elles, un bon modèle donnerait une
-        mauvaise expérience utilisateur.
-
-  \item \textbf{Les limites sont comprises et documentées.}
-        FIRE moins robuste avec la main droite, impossibilité de tirer en se
-        déplaçant — ces limitations sont connues, analysées et des solutions
-        concrètes sont proposées.
+\item \textbf{L'ingenierie systeme compte autant que le modele.}
+      Threading, hold timer, cooldowns sont indispensables
+      pour une experience de jeu fluide.
 \end{enumerate}
 
 \newpage
-%% ============================================================
+%%============================================================
 \appendix
-\section{Structure du Dépôt}
-%% ============================================================
+\section{Structure du depot}
+%%============================================================
 
 \begin{verbatim}
 projet_computer_vision/
-|-- index.html                  # Jeu Space Invaders
-|-- comment_jouer.html          # Guide interactif des gestes
-|-- server.js                   # Serveur WebSocket Node.js
-|-- lancer_jeu.ps1              # Script de demarrage automatique
-|-- hand_landmarker.task        # Modele MediaPipe pre-entraine
-|-- game.bundle.js / game.js    # Jeu JavaScript
-|-- core/ entities/ utils/      # Code source du jeu
+|-- index.html / comment_jouer.html
+|-- server.js / lancer_jeu.ps1
+|-- hand_landmarker.task / rapport_projet.pdf
 +-- cnn_training/
-    |-- 1_collecter_images.py       # Collecte images brutes
-    |-- 2_entrainer_cnn.py          # CNN sur images (approche 1)
-    |-- 3_collecter_landmarks.py    # Collecte landmarks MediaPipe
-    |-- 4_entrainer_landmarks.py    # Reseau dense sur landmarks
-    |-- 5_jouer_avec_cnn.py         # Script de jeu (solution finale)
-    |-- test_cnn_local.py           # Test temps reel sans jeu
+    |-- 1_collecter_images.py
+    |-- 2_entrainer_cnn.py
+    |-- 3_collecter_landmarks.py
+    |-- 4_entrainer_landmarks.py
+    |-- 5_jouer_avec_cnn.py
+    |-- test_cnn_local.py
     +-- modeles/
-        |-- gestes_landmarks.keras  # Modele final (99.6%)
-        |-- classes_landmarks.txt   # Liste des 5 classes
-        |-- courbes_landmarks.png   # Courbes d'entrainement
-        +-- images_rapport/         # Photos des gestes
+        |-- gestes_landmarks.keras
+        |-- classes_landmarks.txt
+        +-- images_rapport/
 \end{verbatim}
 
-%% ============================================================
-\section{Guide de Lancement}
-%% ============================================================
+%%============================================================
+\section{Lancement}
+%%============================================================
 
-\subsection{Prérequis}
-\begin{verbatim}
-pip install tensorflow mediapipe opencv-python websocket-client
-npm install   # dans le dossier du projet
-\end{verbatim}
+\textbf{Automatique :} \verb|.\lancer_jeu.ps1|
 
-\subsection{Lancement automatique (recommande)}
+\textbf{Manuel :}
 \begin{verbatim}
-cd C:\Users\...\projet_computer_vision
-.\lancer_jeu.ps1
-\end{verbatim}
-Ouvre automatiquement les 3 processus et lance la webcam.
-
-\subsection{Lancement manuel}
-\begin{verbatim}
-# Terminal 1
 node server.js
-
-# Terminal 2
 python -m http.server 8000
-
-# Terminal 3
 cd cnn_training && python 5_jouer_avec_cnn.py
-
-# Navigateur : http://localhost:8000
+# http://localhost:8000
 \end{verbatim}
 
-\subsection{Test du modèle seul}
-\begin{verbatim}
-cd cnn_training
-python test_cnn_local.py
-\end{verbatim}
+\textbf{Test modele seul :} \verb|python test_cnn_local.py|
 
 \end{document}
